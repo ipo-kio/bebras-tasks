@@ -17,7 +17,7 @@ function update_config_entries(config) {
 
     config.entry = {};
 
-    let html = fs.readFileSync('./src/XX_00.html', {encoding: "utf8"});
+    let html = fs.readFileSync('./src/XX-00.html', {encoding: "utf8"});
 
     if (!fs.existsSync('./dist'))
         fs.mkdirSync('./dist');
@@ -35,7 +35,7 @@ function update_config_entries(config) {
 module.exports = function (env) {
     let config = {
         /*entry: {
-            'XX_00': 'XX_00/XX_00.js'
+            'XX_00': 'XX_00/XX-00.js'
         },*/
         output: {
             path: path.join(__dirname, '/dist'),
