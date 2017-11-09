@@ -23,7 +23,7 @@ function update_config_entries(config) {
         fs.mkdirSync('./dist');
 
     fs.readdirSync('./src').forEach(file => {
-        if (file.indexOf('.') < 0) {
+        if (file.indexOf('.') < 0 && file.indexOf('-') > 0) {
             config.entry[file] = file + '/' + file + '.js';
 
             let output_html = html.replace('[TASK]', file);
