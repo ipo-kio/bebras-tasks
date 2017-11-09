@@ -9,6 +9,7 @@ export class StatefulElementsScene {
         this.elements = elements;
 
         canvas.addEventListener('mousemove', this.mousemove.bind(this));
+        canvas.addEventListener('mouseleave', this.mouseout.bind(this));
         canvas.addEventListener('click', this.click.bind(this));
 
         this.over_element = null;
@@ -30,6 +31,15 @@ export class StatefulElementsScene {
 
         if (over_element !== this.over_element) {
             this.over_element = over_element;
+            this.draw();
+        }
+
+        e.preventDefault();
+    }
+
+    mouseout(e) {
+        if (this.over_element !== null) {
+            this.over_element = null;
             this.draw();
         }
     }
@@ -56,5 +66,43 @@ export class StatefulElementsScene {
     //intended to be overridden
     drawBg() {
         this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    getStates() {
+        let states = new Array(this.elements.length);
+        for (let i = 0; i < states.length; i++)
+            states[i] = this.elements[i].state;
+        return states;
+    }
+
+    getSolution() {
+        let solution = '';
+        let all_zero = true;
+        for (let i = 0; i < this.elements.length; i++) {
+            let s = this.elements[i].state;
+            solution += s;
+            if (s !== 0)
+                all_zero = false;
+        }
+        return all_zero ? '' : solution;
+    }
+
+    loadSolution(solution) {
+        if (!solution)
+            return;
+
+        if (solution.length !== this.elements.length)
+            return;
+
+        for (let i = 0; i < solution.length; i++)
+            this.elements[i].state = +solution.substr(i, 1);
+
+        this.draw();
+    }
+
+    reset() {
+        for (let e of this.elements)
+            e.state = 0;
+        this.draw();
     }
 }

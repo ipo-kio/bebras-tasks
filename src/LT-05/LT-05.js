@@ -17,9 +17,9 @@ export class Task {
 
         this.COLORS_LIST = [
             "rgb(240, 240, 240)",
-            "red",
-            "green",
-            "blue"
+            "#ffa500",
+            "#ffff00",
+            "#9370db"
         ];
 
         this.POINTS = [
@@ -47,32 +47,33 @@ export class Task {
         ];
 
         this.PIECES = [
-            [0, 1, 3],
-            [1, 2, 5, 4, 3],
-            [0, 3, 4, 7, 6],
-            [4, 5, 8, 7],
-            [6, 7, 10, 9],
-            [7, 8, 14, 11, 10],
-            [0, 6, 9, 12],
-            [2, 14, 8, 5],
-            [9, 10, 11, 13, 12],
-            [11, 14, 13]
+            [0, 1, 3],             //0
+            [1, 2, 5, 4, 3],       //1
+            [0, 3, 4, 7, 6],       //2
+            [4, 5, 8, 7],          //3
+            [6, 7, 10, 9],         //4
+            [7, 8, 14, 11, 10],    //5
+            [0, 6, 9, 12],         //6
+            [2, 14, 8, 5],         //7
+            [9, 10, 11, 13, 12],   //8
+            [11, 14, 13]           //9
         ];
 
-        new StatefulElementsScene(this.canvas, this.createElements());
+        this.find_edges();
+
+        this.scene = new StatefulElementsScene(this.canvas, this.createElements());
     }
 
     reset() {
+        this.scene.reset();
     };
 
     isEnabled() {
-        return this.enabled;
+        return this.scene.enabled;
     };
 
     setEnabled(state) {
-        this.enabled = state;
-
-        //redraw
+        this.scene.enabled = state;
     };
 
     setInitCallback(_initCallback) {
@@ -84,15 +85,25 @@ export class Task {
     };
 
     getSolution() {
-        return ''; //'' means no solution
+        return this.scene.getSolution();
     }
 
     loadSolution(solution) {
-
+        this.scene.loadSolution(solution);
     }
 
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
-        return 2;
+        let states = this.scene.getStates();
+
+        for (let s of states)
+            if (s === 0)
+                return 0;
+
+        for (let e = 0; e < this.EDGES.length; e += 2)
+            if (states[this.EDGES[e]] === states[this.EDGES[e + 1]])
+                return 0;
+
+        return 1;
     }
 
     //         private elements
@@ -110,6 +121,21 @@ export class Task {
             elements.push(new Piece(this.ctx, this.COLORS_LIST, points))
         }
         return elements;
+    }
+
+    find_edges() {
+        this.EDGES = [];
+        for (let i = 0; i < this.PIECES.length; i++)
+            for (let j = i + 1; j < this.PIECES.length; j++) {
+                let all = this.PIECES[i].concat(this.PIECES[j]);
+                all.sort();
+                let cnt = 0;
+                for (let k = 0; k < all.length - 1; k++)
+                    if (all[k] === all[k + 1])
+                        cnt++;
+                if (cnt >= 2)
+                    this.EDGES.push(i, j);
+            }
     }
 }
 
@@ -151,11 +177,15 @@ class Piece extends StatefulElement {
         let s_abs = 0; //sum of absolute
 
         let p = this.points;
-        for (let i = 0; i + 3 < p.length; i += 2) {
+        for (let i = 0; i + 1 < p.length; i += 2) {
             let v1x = p[i] - x;
             let v1y = p[i + 1] - y;
-            let v2x = p[i + 2] - x;
-            let v2y = p[i + 3] - y;
+
+            let j = i + 2;
+            if (j + 1 >= p.length)
+                j = 0;
+            let v2x = p[j] - x;
+            let v2y = p[j + 1] - y;
             let s_triag = v1x * v2y - v1y * v2x;
             s += s_triag;
             s_abs += Math.abs(s_triag);

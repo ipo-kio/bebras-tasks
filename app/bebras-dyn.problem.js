@@ -131,7 +131,7 @@ var add_bebras_dyn_problem = (function(){
 
 
                 if (console)
-                    console.log('sending solution', sol);
+                    console.log('sending solution', sol, problem.getAnswer());
             } else
                 dces2contest.submit_answer(dces2contest.get_problem_index($problem), {
                     'r': -1,

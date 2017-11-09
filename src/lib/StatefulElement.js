@@ -18,7 +18,6 @@ export class StatefulElement {
     }
 
     next_state() {
-        console.log(this.state, ' -> ', this.states_transitions[this.state]);
         this.state = this.states_transitions[this.state];
     }
 }
