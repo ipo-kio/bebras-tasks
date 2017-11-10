@@ -55,7 +55,7 @@ if (!Object.keys) {
  _type - Тип объекта (0 - место, куда можно перенести его. 1 - статический объект. 2 - перемещаемый объект)
  _vObject - визуальный объект
  Имеет следующие свойства:
- imageId,stroke,strokeWidth
+ imageId,stroke,strokeWidth, crop {x, y, width, height}
  _beforeRender - функция, вызывающаяся перед рендерингом каждого элемента
  */
 var Place = function (_x, _y, _width, _height, _name, _type, _vObject, _beforeRender) {
