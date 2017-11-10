@@ -311,6 +311,7 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start)
                 if (!(key in magnetPlaces))
                     continue;
                 var place = magnetPlaces[key];
+                //TODO place.current == 0 ?!?!?!?!, don't make flying places first
                 returnObject[places[place.id].name] = place.current ? places[place.current].name : -1;
             }
             return returnObject;
