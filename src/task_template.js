@@ -19,7 +19,7 @@ export class Task {
         //redraw
     };
 
-    setInitCallback = function (_initCallback) {
+    setInitCallback(_initCallback) {
         this.initCallback = _initCallback;
 
         //if we are initialized just after creation, any attempt to set up init callback is after we are initialized

@@ -71,6 +71,11 @@ public class Pics {
     }
 
     public void writePNG() throws IOException {
+        File precompressedPNG = new File(problemFolder, problemName + ".nocompress.png");
+        ImageIO.write(total, "png", precompressedPNG);
+    }
+
+    public void writePNGTinify() throws IOException {
         Tinify.setKey("HROGXDV8nMSfipDSma6I2DVl_R03I84y");
 
         File precompressedPNG = new File(problemFolder, problemName + ".nocompress.png");
