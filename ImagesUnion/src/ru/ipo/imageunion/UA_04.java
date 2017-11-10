@@ -11,11 +11,10 @@ public class UA_04 {
     private static final String TASKS_DIRECTORY = "src";
     private static final String TASK_NAME = "UA-04";
 
-    //install https://github.com/haraldk/TwelveMonkeys as Maven Dependency
 
     public static void main(String[] args) throws IOException {
-        File taskFolder = new File(TASKS_DIRECTORY, TASK_NAME);
-
-        Pics pics = new Pics(taskFolder);
+        Pics pics = new Pics(TASK_NAME, new File(TASKS_DIRECTORY));
+        pics.writePNG();
+        pics.writeCropPics();
     }
 }

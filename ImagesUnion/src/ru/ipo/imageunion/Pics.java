@@ -1,5 +1,9 @@
 package ru.ipo.imageunion;
 
+import com.sun.imageio.plugins.png.PNGImageWriter;
+import com.tinify.Source;
+import com.tinify.Tinify;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,11 +11,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+/*<dependency>
+<groupId>com.tinify</groupId>
+<artifactId>tinify</artifactId>
+<version>RELEASE</version>
+</dependency>*/
+
+//install  as Maven Dependency batik-transcoder
 
 public class Pics {
 
@@ -19,11 +29,14 @@ public class Pics {
     private final Map<String, Pic> pics = new HashMap<>();
 
     private BufferedImage total;
+    private final String problemName;
+    private final File problemFolder;
 
     public Pics(String problemName, File folder) throws IOException {
-        folder = new File(folder, problemName);
+        this.problemFolder = new File(folder, problemName);
+        this.problemName = problemName;
 
-        File[] picsFiles = folder.listFiles(fname -> {
+        File[] picsFiles = problemFolder.listFiles(fname -> {
             String name = fname.getName().toLowerCase();
             return (name.endsWith(".png") || name.endsWith(".svg")) && name.startsWith("_");
         });
@@ -34,13 +47,16 @@ public class Pics {
 
             if (name.endsWith(".svg")) {
                 String[] splitId = id.split("_");
+                if (splitId.length < 3)
+                    throw new IllegalArgumentException("in svg images you must have the following name: id_width_height");
+
                 id = splitId[0];
                 BufferedImage bi = SVG.loadSVG(
                         picsFile.toURI().toString(),
                         Integer.parseInt(splitId[1]),
                         Integer.parseInt(splitId[2])
                 );
-                for (int i = 3; i <= splitId.length; i++)
+                for (int i = 3; i < splitId.length; i++)
                     bi = process(bi, splitId[i]);
                 images.put(id, bi);
             } else
@@ -54,8 +70,20 @@ public class Pics {
         return images;
     }
 
-    public void writePNG() {
+    public void writePNG() throws IOException {
+        Tinify.setKey("HROGXDV8nMSfipDSma6I2DVl_R03I84y");
 
+        File precompressedPNG = new File(problemFolder, problemName + ".nocompress.png");
+        ImageIO.write(total, "png", precompressedPNG);
+
+        File compressedPNG = new File(problemFolder, problemName + ".png");
+        Source source = Tinify.fromFile(precompressedPNG.getAbsolutePath());
+        source.toFile(compressedPNG.getAbsolutePath());
+    }
+
+    public void writeCropPics() {
+        for (Pic pic : pics.values())
+            System.out.println(pic.getName() + ": " + pic.toCropString());
     }
 
     private BufferedImage process(BufferedImage bi, String action) {

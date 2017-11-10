@@ -55,4 +55,38 @@ public class Pic {
         this.cropY = y;
         return this;
     }
+
+    // --- getters ---
+
+    public String getName() {
+        return name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getCropX() {
+        return cropX;
+    }
+
+    public int getCropY() {
+        return cropY;
+    }
 }
