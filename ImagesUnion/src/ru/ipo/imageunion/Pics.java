@@ -91,6 +91,11 @@ public class Pics {
             System.out.println(pic.getName() + ": " + pic.toCropString());
     }
 
+    public void writeDDlibPlaces() {
+        for (Pic pic : pics.values())
+            System.out.println(pic.toDDlibString());
+    }
+
     private BufferedImage process(BufferedImage bi, String action) {
         Pattern middleCrop = Pattern.compile("mcr(\\d+)x(\\d+)");
         Matcher m1 = middleCrop.matcher(action);

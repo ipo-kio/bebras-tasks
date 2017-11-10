@@ -15,6 +15,6 @@ public class UA_04 {
     public static void main(String[] args) throws IOException {
         Pics pics = new Pics(TASK_NAME, new File(TASKS_DIRECTORY));
         pics.writePNG();
-        pics.writeCropPics();
+        pics.writeDDlibPlaces();
     }
 }

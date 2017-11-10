@@ -27,6 +27,16 @@ function update_config_entries(config) {
             config.entry[file] = file + '/' + file + '.js';
 
             let output_html = html.replace('[TASK]', file);
+
+            let pngFile = 'src/' + file + '/' + file + '.nocompress.png';
+            let bgReplacement;
+            if (fs.existsSync(pngFile))
+                bgReplacement = ", 'bg': '../" + pngFile + "'";
+            else
+                bgReplacement = '';
+
+            output_html = output_html.replace('[ADD BG IMAGE]', bgReplacement);
+
             fs.writeFileSync('./dist/' + file + '.html', output_html, {encoding: "utf8"});
         }
     });

@@ -18,12 +18,12 @@ public class Pic {
     private int cropY;
 
     public String toCropString() {
-        return String.format("crop: {x: %d, y: %d, width: %d, height: %d}", x, y, width, height);
+        return String.format("crop: {x: %d, y: %d, width: %d, height: %d}", cropX, cropY, width, height);
     }
 
     public String toDDlibString() {
         return String.format(
-                "new Place(%d, %d, %d, %d, '%s', %d, {imageId: 'bg', %s})",
+                "new Place(%d, %d, %d, %d, '%s', %d, {imageId: 'bg', %s}),",
                 x, y, width, height, name, type, toCropString()
         );
     }
