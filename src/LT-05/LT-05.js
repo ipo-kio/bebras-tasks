@@ -16,7 +16,7 @@ export class Task {
         this.ctx = this.canvas.getContext('2d');
 
         this.COLORS_LIST = [
-            "rgb(240, 240, 240)",
+            // "rgb(240, 240, 240)",
             "#ffa500",
             "#ffff00",
             "#9370db"
@@ -69,11 +69,11 @@ export class Task {
     };
 
     isEnabled() {
-        return this.scene.enabled;
+        return this.scene.isEnabled();
     };
 
     setEnabled(state) {
-        this.scene.enabled = state;
+        this.scene.setEnabled(state);
     };
 
     setInitCallback(_initCallback) {
@@ -95,9 +95,11 @@ export class Task {
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
         let states = this.scene.getStates();
 
+        /*
         for (let s of states)
             if (s === 0)
                 return 0;
+        */
 
         for (let e = 0; e < this.EDGES.length; e += 2)
             if (states[this.EDGES[e]] === states[this.EDGES[e + 1]])
@@ -143,10 +145,19 @@ class Piece extends StatefulElement {
 
     constructor(ctx, colors_list, points/*array of x, y of points*/) {
         let c = colors_list.length;
+
+        /*
         let next_elements = new Array(c + 1);
         for (let i = 0; i < c - 1; i++)
             next_elements[i] = i + 1;
         next_elements[c - 1] = 1;
+        */
+
+        let next_elements = new Array(c);
+        for (let i = 0; i < c - 1; i++)
+            next_elements[i] = i + 1;
+        next_elements[c - 1] = 0;
+
         super(ctx, c, next_elements);
 
         this.colors_list = colors_list;
