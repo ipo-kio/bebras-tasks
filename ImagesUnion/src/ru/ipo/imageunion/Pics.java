@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,10 @@ public class Pics {
     private final File problemFolder;
 
     public Pics(String problemName, File folder) throws IOException {
+        this(problemName, folder, 0);
+    }
+
+    public Pics(String problemName, File folder, int placer) throws IOException {
         this.problemFolder = new File(folder, problemName);
         this.problemName = problemName;
 
@@ -63,7 +68,10 @@ public class Pics {
                 images.put(id, ImageIO.read(picsFile));
         }
 
-        placeImages();
+        if (placer == 0)
+            placeImages();
+        else if (placer == 1)
+            placeImagesOneOver();
     }
 
     public Map<String, BufferedImage> getImages() {
@@ -125,16 +133,44 @@ public class Pics {
 
         total = new BufferedImage(widthSum, maxHeight, BufferedImage.TYPE_INT_ARGB);
 
+        placePlease(entries, 0);
+    }
+
+    private void placeImagesOneOver() {
+        ArrayList<Map.Entry<String, BufferedImage>> entries = new ArrayList<>(images.entrySet());
+
+        //sort width descending
+        entries.sort((e1, e2) -> e2.getValue().getWidth() - e1.getValue().getWidth());
+
+        Map.Entry<String, BufferedImage> first = entries.remove(0);
+        String id = first.getKey();
+        BufferedImage i = first.getValue();
+
+        int widthSum = entries.stream().mapToInt(e -> e.getValue().getWidth()).sum();
+        int maxHeight = entries.stream().mapToInt(e -> e.getValue().getHeight()).max().orElse(0);
+
+        total = new BufferedImage(Math.max(widthSum, i.getWidth()), i.getHeight() + maxHeight, BufferedImage.TYPE_INT_ARGB);
+
+        pics.put(id, new Pic().name(id).cropXY(0, 0).size(i.getWidth(), i.getHeight()));
+        Graphics2D g = total.createGraphics();
+        g.drawImage(i, 0, 0, null);
+        g.dispose();
+
+        placePlease(entries, first.getValue().getHeight());
+    }
+
+    private void placePlease(List<Map.Entry<String, BufferedImage>> entries, int y0) {
         Graphics2D g = total.createGraphics();
         int x = 0;
         for (Map.Entry<String, BufferedImage> entry : entries) {
             BufferedImage i = entry.getValue();
             String id = entry.getKey();
 
-            pics.put(id, new Pic().name(id).cropXY(x, 0).size(i.getWidth(), i.getHeight()));
+            pics.put(id, new Pic().name(id).cropXY(x, y0).size(i.getWidth(), i.getHeight()));
 
-            g.drawImage(i, x, 0, null);
+            g.drawImage(i, x, y0, null);
             x += i.getWidth();
         }
+        g.dispose();
     }
 }
