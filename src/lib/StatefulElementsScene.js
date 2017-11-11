@@ -24,6 +24,8 @@ export class StatefulElementsScene {
             return;
 
         let clicked_element = this.get_clicked_element(mouse_coordinates(this.canvas, e));
+        if (!clicked_element)
+            return;
         clicked_element.next_state();
 
         this.draw();

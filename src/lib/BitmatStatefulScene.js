@@ -14,6 +14,8 @@ export class BitmatStatefulScene extends StatefulElementsScene {
         if (!this.bg) //still not initialized
             return;
 
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
         this.ctx.drawImage(
             this.bg,
             this.sourceX, this.sourceY, this.width, this.height,
