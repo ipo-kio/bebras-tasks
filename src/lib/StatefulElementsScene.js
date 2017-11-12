@@ -28,6 +28,9 @@ export class StatefulElementsScene {
             return;
         clicked_element.next_state();
 
+        if (clicked_element.clickHandler)
+            clicked_element.clickHandler();
+
         this.draw();
 
         e.preventDefault();
