@@ -3,11 +3,11 @@ import {BitmapElement, BitmapState} from "../lib/BitmatStatefulScene";
 
 let positions = [
     {id: 1, x: 254, y: 163, width: 54, height: 72},
-    {id: 2, x: 308, y: 163, width: 53, height: 71},
     {id: 3, x: 200, y: 163, width: 54, height: 72},
+    {id: 6, x: 0, y: 163, width: 73, height: 81},
     {id: 4, x: 144, y: 163, width: 56, height: 81},
-    {id: 5, x: 73, y: 163, width: 71, height: 81},
-    {id: 6, x: 0, y: 163, width: 73, height: 81}
+    {id: 2, x: 308, y: 163, width: 53, height: 71},
+    {id: 5, x: 73, y: 163, width: 71, height: 81}
 ];
 
 let posX = [31, 245, 317, 395, 474, 550, 636];
@@ -46,6 +46,9 @@ export class Task extends BitmapStatesTask {
 
         this.all_elements = elements;
 
+        this.empty_solution = '';
+        this.empty_solution = this.getSolution();
+
         return elements;
     }
 
@@ -58,8 +61,49 @@ export class Task extends BitmapStatesTask {
 
     put_element_at(el, i_new) {
         let i_el = this.element_2_index(el);
-        this.elementsArray[i_el] = null;
+        if (i_el >= 0)
+            this.elementsArray[i_el] = null;
         this.elementsArray[i_new] = el;
         el.x = posX[i_new];
+    }
+
+    getSolution() {
+        let solution = '';
+        for (let i = 0; i < this.elementsArray.length; i++) {
+            let el = this.elementsArray[i];
+            solution += el === null ? '0' : el.id;
+        }
+
+        if (solution === this.empty_solution)
+            solution = '';
+
+        return solution;
+    }
+
+    find_all_element_by_id(id) {
+        for (let el of this.all_elements)
+            if (el.id === id)
+                return el;
+        return null;
+    }
+
+    loadSolution(solution) {
+        if (solution === '')
+            solution = this.empty_solution;
+
+        if (solution.length !== this.elementsArray.length)
+            return;
+
+        for (let i = 0; i < solution.length; i++) {
+            let el_id = +solution[i];
+            if (el_id !== 0) {
+                let el = this.find_all_element_by_id(el_id);
+                if (el === null)
+                    return;
+                this.put_element_at(el, i);
+            }
+        }
+
+        this.scene.draw();
     }
 }
