@@ -39,9 +39,9 @@ export class Task extends BitmapStatesTask {
                 elements.push(new BitmapElement(ctx, x, y, bitmap_states, [1, 0]));
             }
 
-        console.log(elements);
         return elements;
     }
 }
 
 //correct: 110001100000000010110101110000100010001000010
+//old images: <p><img src="/~res/CVMgaYjeYIsNaLsXeODs1509785708501.svg" alt="an image" /></p>
