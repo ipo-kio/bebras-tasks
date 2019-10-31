@@ -8,7 +8,7 @@ export class Task extends SimpleStatesTask {
     initCallback = null;
 
     constructor(container_id, images) {
-        // super(, , , );
+        super(, , , );
 
         let canvas = appendCanvas(container_id, 400, 500);
     }
@@ -56,8 +56,4 @@ export class Task extends SimpleStatesTask {
     _redraw() {
 
     }
-}
-
-class TransitionButton extends StatefulElement {
-
 }
