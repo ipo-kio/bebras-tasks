@@ -44,9 +44,9 @@ function update_config_entries(config) {
 
 module.exports = function (env) {
     let config = {
-        /*entry: {
+        entry: {
             'XX_00': 'XX_00/XX-00.js'
-        },*/
+        },
         output: {
             path: path.join(__dirname, '/dist'),
             filename: '[name].js',
@@ -102,8 +102,8 @@ module.exports = function (env) {
 
     update_config_entries(config);
 
-    if (env && env.mode === 'prod') {
+    if (env && env.mode === 'prod')
         return merge(config, productionConfig, {arrayMerge: arrayMerge});
-    } else
+    else
         return merge(config, debugConfig, {arrayMerge: arrayMerge});
 };
