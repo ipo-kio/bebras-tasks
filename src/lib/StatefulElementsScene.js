@@ -1,6 +1,9 @@
 import mouse_coordinates from "./MouseCoordinates"
 
 export class StatefulElementsScene {
+
+    outlineWidth = 4;
+
     constructor(canvas, elements) {
         this.canvas = canvas;
         this.width = this.canvas.width;
@@ -34,6 +37,13 @@ export class StatefulElementsScene {
         this.draw();
 
         e.preventDefault();
+    }
+
+    //Intended to be used when radio-button behaviour is needed
+    reset_all_except_one(element) {
+        for (let e of this.elements)
+            if (e !== element)
+                e.state = e.start_state;
     }
 
     mousemove(e) {
@@ -71,10 +81,10 @@ export class StatefulElementsScene {
         this.drawBg();
         for (let e of this.elements)
             e.draw();
-        if (this.over_element !== null) {
+        if (this.over_element !== null && this.over_element.states_count() > 1) {
             this.over_element.begin_outline_path();
             this.ctx.strokeStyle = "rgba(240, 240, 0, 0.9)";
-            this.ctx.lineWidth = 4;
+            this.ctx.lineWidth = this.outlineWidth;
             this.ctx.stroke();
         }
 
@@ -82,11 +92,16 @@ export class StatefulElementsScene {
             this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
             this.ctx.fillRect(0, 0, this.width, this.height);
         }
+        this.drawFg();
     }
 
     //intended to be overridden
     drawBg() {
         this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    //intended to be overridden
+    drawFg() {
     }
 
     getStates() {

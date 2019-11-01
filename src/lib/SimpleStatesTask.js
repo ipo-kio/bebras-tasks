@@ -5,12 +5,14 @@ import {StatefulElementsScene} from "../lib/StatefulElementsScene";
 export class SimpleStatesTask {
 
     //container - is an id of element
-    constructor(container, width, height, draw_bg) {
+    //if not initialized just after creation, don't forget to call InitCallback() by yourself
+    constructor(container, width, height, draw_bg, initialize_just_after_creation=true) {
         this.enabled = true;
         this.initCallback = null;
 
         this.WIDTH = width;
         this.HEIGHT = height;
+        this.initialize_just_after_creation = initialize_just_after_creation;
 
         this.canvas = appendCanvas(container, this.WIDTH, this.HEIGHT);
         this.ctx = this.canvas.getContext('2d');
@@ -34,7 +36,7 @@ export class SimpleStatesTask {
         this.initCallback = _initCallback;
 
         //if we are initialized just after creation, any attempt to set up init callback is after we are initialized
-        if (this.initCallback)
+        if (this.initCallback && this.initialize_just_after_creation)
             this.initCallback();
     };
 
