@@ -44,9 +44,9 @@ function update_config_entries(config) {
 
 module.exports = function (env) {
     let config = {
-        entry: {
+        /*entry: {
             'XX_00': 'XX_00/XX-00.js'
-        },
+        },*/
         output: {
             path: path.join(__dirname, '/dist'),
             filename: '[name].js',
@@ -67,6 +67,7 @@ module.exports = function (env) {
                         ],
                         plugins: [
                             "transform-object-rest-spread",
+                            "transform-class-properties"
                             // ["transform-object-rest-spread", { "useBuiltIns": true }]
                         ]
                     }

@@ -1,4 +1,4 @@
-import {BitmatStatefulScene} from "../lib/BitmatStatefulScene";
+import {BitmapStatefulScene} from "./BitmapStatefulScene";
 import {appendCanvas} from "../lib/ContainerHelpers";
 
 export class BitmapStatesTask {
@@ -21,7 +21,7 @@ export class BitmapStatesTask {
 
         this.canvas = appendCanvas(this.container, this.bg_position.width, this.bg_position.height);
         this.ctx = this.canvas.getContext('2d');
-        this.scene = new BitmatStatefulScene(
+        this.scene = new BitmapStatefulScene(
             this.canvas,
             this.img,
             this.bg_position.x, this.bg_position.y,

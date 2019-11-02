@@ -1,7 +1,7 @@
 import {StatefulElementsScene} from "./StatefulElementsScene";
 import {StatefulElement} from "./StatefulElement";
 
-export class BitmatStatefulScene extends StatefulElementsScene {
+export class BitmapStatefulScene extends StatefulElementsScene {
     constructor(canvas, bg, sourceX, sourceY, elements) {
         super(canvas, elements);
         this.bg = bg;

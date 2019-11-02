@@ -81,7 +81,7 @@ export class StatefulElementsScene {
         this.drawBg();
         for (let e of this.elements)
             e.draw();
-        if (this.over_element !== null && this.over_element.states_count() > 1) {
+        if (this.over_element !== null && (this.over_element.force_highlighting || this.over_element.states_count() > 1)) {
             this.over_element.begin_outline_path();
             this.ctx.strokeStyle = "rgba(240, 240, 0, 0.9)";
             this.ctx.lineWidth = this.outlineWidth;

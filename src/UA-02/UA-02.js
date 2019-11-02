@@ -1,34 +1,31 @@
-import {appendCanvas} from "../lib/ContainerHelpers";
 import {SimpleStatesTask} from "../lib/SimpleStatesTask";
-import {StatefulElement} from "../lib/StatefulElement";
+import {TransitionButton} from "./TransitionButton";
+import {CIRCLE, Pattern, SQUARE, TRIANG} from "./Pattern";
+
+const FINAL_PATTERN = [CIRCLE, CIRCLE, CIRCLE];
 
 export class Task extends SimpleStatesTask {
 
     enabled = false;
     initCallback = null;
 
+    currentPattern;
+    finalPattern;
+
     constructor(container_id, images) {
-        super(, , , );
+        super(container_id, 620, 400);
 
-        let canvas = appendCanvas(container_id, 400, 500);
+        this.currentPattern = new Pattern(this.ctx, 6, 180, [SQUARE, SQUARE], 1);
+        this.finalPattern = new Pattern(this.ctx, 6, 240, FINAL_PATTERN, 1, false);
+
+        this.scene.draw_bg = () => {
+            let overElement = this.scene.over_element;
+            if (overElement !== null)
+                this.currentPattern.highlight(overElement.pat1.p);
+            this.currentPattern.draw();
+            this.finalPattern.draw();
+        }
     }
-
-    isEnabled() {
-        return this.enabled;
-    }
-
-    setEnabled(state) {
-        this.enabled = state;
-        this._redraw();
-    };
-
-    setInitCallback(_initCallback) {
-        this.initCallback = _initCallback;
-
-        //we are initialized just after creation, so any attempt to set up init callback is after we are initialized
-        if (this.initCallback)
-            this.initCallback();
-    };
 
     getSolution() {
         return "";
@@ -43,9 +40,28 @@ export class Task extends SimpleStatesTask {
         this._redraw();
     };
 
-    getAnswer() {
-        return 2;
-    };
+    createElements() {
+        let ind = 0;
+        let ctx = this.ctx;
+
+        function transition_button(p1, p2) {
+            let x = 6 + 300 * (ind % 2);
+            let y = 6 + (Pattern.height_by_size_id(0) + 10) * Math.floor(ind / 2);
+            ind++;
+
+            return new TransitionButton(ctx, p1, p2, x, y);
+        }
+
+        this.transition_buttons = [
+            transition_button([TRIANG], [CIRCLE, CIRCLE]),
+            transition_button([SQUARE], [TRIANG, TRIANG]),
+            transition_button([TRIANG, CIRCLE], [SQUARE]),
+            transition_button([SQUARE, SQUARE], [TRIANG, CIRCLE, CIRCLE]),
+            transition_button([CIRCLE, CIRCLE, CIRCLE], [])
+        ];
+
+        return this.transition_buttons;
+    }
 
     // private methods
 
@@ -54,6 +70,6 @@ export class Task extends SimpleStatesTask {
     }
 
     _redraw() {
-
+        this.scene.draw();
     }
 }

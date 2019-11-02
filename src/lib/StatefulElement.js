@@ -7,6 +7,8 @@ export class StatefulElement {
 
         this.state = start_state;
         this.start_state = start_state;
+
+        this.force_highlighting = false; // true = highlight even if one state
     }
 
     draw() {
