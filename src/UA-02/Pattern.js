@@ -1,6 +1,6 @@
 export const TRIANG = 0, CIRCLE = 1, SQUARE = 2;
 
-const SIZE = [32, 40], MARGIN = [4, 6];
+const SIZE = [32, 40], MARGIN = [3, 4];
 const TRIANG_HEIGHT = [0, 0];
 const TRIANG_SHIFT = [0, 0];
 
@@ -65,7 +65,7 @@ export class Pattern {
         for (let i = 0; i < this.p.length - q.length + 1; i++) {
             let found = true;
             for (let j = 0; j < q.length; j++) {
-                if (this.p[j + i] !== q[i]) {
+                if (this.p[j + i] !== q[j]) {
                     found = false;
                     break;
                 }
@@ -94,7 +94,7 @@ export class Pattern {
         ctx.translate(this.x + (size + 2 * margin) * pos, this.y);
 
         ctx.beginPath();
-        ctx.fillStyle = 'rgba(255,255,0,0.5)';
+        ctx.fillStyle = 'rgba(255, 255, 0, 0.5)';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1;
         ctx.setLineDash([4, 4]);
@@ -112,6 +112,19 @@ export class Pattern {
 
     get height() {
         return Pattern.height_by_size_id(this.size_ind);
+    }
+
+    substitute(pos, num_delete, new_sub) {
+        this.p.splice(pos, num_delete, ...new_sub);
+    }
+
+    is(p) {
+        if (p.length !== this.p.length)
+            return false;
+        for (let i = 0; i < p.length; i++)
+            if (p[i] !== this.p[i])
+                return false;
+        return true;
     }
 
     static height_by_size_id(size_ind) {

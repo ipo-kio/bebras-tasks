@@ -5,8 +5,13 @@ const ARROW_WIDTH = 40;
 
 export class TransitionButton extends StatefulElement {
 
-    constructor(ctx, pat1, pat2, x, y) {
+    ind;
+
+    constructor(task, ctx, ind, pat1, pat2, x, y) {
         super(ctx, 1, [0]);
+
+        this.task = task;
+        this.ind = ind;
 
         this.x = x;
         this.y = y;
@@ -16,7 +21,9 @@ export class TransitionButton extends StatefulElement {
 
         this.force_highlighting = true;
 
-        this.clickHandler = (e) => console.log("aa");
+        this.clickHandler = () => {
+            this.task.do(this.ind);
+        };
     }
 
     draw() {
