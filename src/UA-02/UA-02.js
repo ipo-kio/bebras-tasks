@@ -41,7 +41,7 @@ export class Task extends SimpleStatesTask {
             if (solved) {
                 this.ctx.font = 'bold 16px sans-serif';
                 this.ctx.fillStyle = '#ff2c1d';
-                this.ctx.fillText('Готово! Сохраните решение', 9, 300);
+                this.ctx.fillText('Готово! Сохраните ответ', 9, 300);
             }
 
             this.undo_button.x = 12 + this.currentPattern.x + this.currentPattern.width;
@@ -51,14 +51,25 @@ export class Task extends SimpleStatesTask {
     }
 
     getSolution() {
-        return "";
+        let r = "";
+        for (let p of this.steps)
+            r += p;
+        return r;
     };
 
     loadSolution(solution) {
         this._reset();
 
-        if (solution === "")
-            return;
+        solution = "" + solution;
+
+        this.steps = [];
+        for (let i = 0; i < solution.length; i++) {
+            let ind = +solution[i];
+            if (ind >= 0 && ind < this.transition_buttons.length)
+                this.steps.push(ind)
+        }
+
+        this.update_state_from_steps();
 
         this._redraw();
     };
@@ -94,7 +105,11 @@ export class Task extends SimpleStatesTask {
         return elements;
     }
 
-    // private methods
+    getAnswer() {
+        return this.currentPattern.is(FINAL_PATTERN) ? 1 : 0;
+    }
+
+// private methods
 
     _reset() {
 
