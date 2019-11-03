@@ -58,8 +58,6 @@ export class Task extends SimpleStatesTask {
     };
 
     loadSolution(solution) {
-        this._reset();
-
         solution = "" + solution;
 
         this.steps = [];
@@ -111,10 +109,6 @@ export class Task extends SimpleStatesTask {
 
 // private methods
 
-    _reset() {
-
-    }
-
     _redraw() {
         this.scene.draw();
     }
@@ -156,3 +150,7 @@ export class Task extends SimpleStatesTask {
         }
     }
 }
+
+/*
+<p>Начальная последовательность фигурок такова:&#160;<img style="height:30px; vertical-align: middle" src="/~res/tIJfS6jIl9LgUdfj_Agt1570989084854.svg" alt="an image" /></p><p>Нажатие каждой из кнопок заменяет первое вхождение набора фигурок, нарисованного слева от стрелки, на набор нарисованный справа.</p><p>Кнопка 1:&#160;<img style="height:30px; vertical-align: middle" src="/~res/xdjsu_APfc0hcPUxvFuZ1570988953571.svg" alt="an image" /></p><p>Кнопка 2:&#160;<img style="height:30px; vertical-align: middle" src="/~res/dqIVAV9W9xTG4-XLMPg21570989008516.svg" alt="an image" /></p><p>Кнопка 3:&#160;<img style="height:30px; vertical-align: middle" src="/~res/HZPGxx-ezMZcNAnuXVsr1570989024961.svg" alt="an image" /></p><p>Кнопка 4:&#160;<img style="height:30px; vertical-align: middle" src="/~res/fAYcDbXqiO7NIk3ubG621570989039138.svg" alt="an image" /></p><p>Кнопка 5:&#160;<img style="height:30px; vertical-align: middle" src="/~res/L8oFG9h9Ez5XELk3oVb_1570989053596.svg" alt="an image" /></p><p>Преврати начальную последовательность фигурок, нажимая кнопки, в такую последовательность:</p><p><img style="height:30px; vertical-align: middle" src="/~res/woLZF3GGkMePwPkVKhSD1570989070171.svg" alt="an image" /></p>
+*/
