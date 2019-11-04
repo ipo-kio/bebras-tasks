@@ -66,7 +66,7 @@ var Place = function (_x, _y, _width, _height, _name, _type, _vObject, _beforeRe
         width: _width,
         height: _height,
         name: _name,
-        vObject: (_vObject ? _vObject : {imageId: false, stroke: "000000", strokeWidth: 2}),
+        vObject: (_vObject ? _vObject : {imageId: false, stroke: "000000", strokeWidth: 2, fill: "rgba(0, 0, 0, 0)"}),
         getType: function () {
             return type;
         },
@@ -152,6 +152,7 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start)
                     height: place.height,
                     strokeWidth: place.vObject.strokeWidth,
                     stroke: place.vObject.stroke,
+                    fill: place.vObject.fill,
                     dashArray: place.vObject.dashArray
                 });
 
@@ -168,7 +169,7 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start)
                 object.on('dragstart', function () {
                     this.is_dragging = true;
                     this.setZIndex(1000);
-                    if (this.ref.current) {
+                    if (this.ref.current || this.ref.current === 0) {
                         magnetPlaces[this.ref.current].current = false;
                         this.ref.current.current = false;
                         this.ref.current = false;
@@ -200,6 +201,10 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start)
                         var magnetPlaceId = magnetPlaces[minPlaceKey].id;
                         var dstX = places[magnetPlaceId].x + places[magnetPlaceId].width / 2 - this.getWidth() / 2;
                         var dstY = places[magnetPlaceId].y + places[magnetPlaceId].height / 2 - this.getHeight() / 2;
+
+                        dstX = Math.round(dstX);
+                        dstY = Math.round(dstY);
+
                         this.transitionTo({x: dstX, y: dstY, duration: 0.3});
                         magnetPlaces[minPlaceKey].current = this.ref.id;
                         this.ref.current = minPlaceKey;
