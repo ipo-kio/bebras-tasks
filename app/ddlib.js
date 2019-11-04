@@ -150,7 +150,8 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start)
                     width: place.width,
                     height: place.height,
                     strokeWidth: place.vObject.strokeWidth,
-                    stroke: place.vObject.stroke
+                    stroke: place.vObject.stroke,
+                    dashArray: place.vObject.dashArray
                 });
 
             //empty place
