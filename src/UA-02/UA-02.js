@@ -104,6 +104,8 @@ export class Task extends SimpleStatesTask {
     }
 
     getAnswer() {
+        if (this.getSolution() === "")
+            return -1;
         return this.currentPattern.is(FINAL_PATTERN) ? 1 : 0;
     }
 

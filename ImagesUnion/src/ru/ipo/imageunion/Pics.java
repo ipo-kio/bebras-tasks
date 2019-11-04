@@ -84,14 +84,18 @@ public class Pics {
     }
 
     public void writePNGTinify() throws IOException {
-        Tinify.setKey("HROGXDV8nMSfipDSma6I2DVl_R03I84y");
+        try {
+            Tinify.setKey("HROGXDV8nMSfipDSma6I2DVl_R03I84y");
 
-        File precompressedPNG = new File(problemFolder, problemName + ".nocompress.png");
-        ImageIO.write(total, "png", precompressedPNG);
+            File precompressedPNG = new File(problemFolder, problemName + ".nocompress.png");
+            ImageIO.write(total, "png", precompressedPNG);
 
-        File compressedPNG = new File(problemFolder, problemName + ".png");
-        Source source = Tinify.fromFile(precompressedPNG.getAbsolutePath());
-        source.toFile(compressedPNG.getAbsolutePath());
+            File compressedPNG = new File(problemFolder, problemName + ".png");
+            Source source = Tinify.fromFile(precompressedPNG.getAbsolutePath());
+            source.toFile(compressedPNG.getAbsolutePath());
+        } catch (Exception e) {
+            System.out.println("failed to tinify");
+        }
     }
 
     public void writeCropPics() {
