@@ -12,7 +12,7 @@ public class CH_03b {
 
     public static void main(String[] args) throws IOException {
         Pics pics = new Pics(TASK_NAME, new File(TASKS_DIRECTORY), 0);
-//        pics.writePNGTinify();
+        pics.writePNGTinify();
         pics.writePNG();
         pics.writeDDlibPlaces();
     }

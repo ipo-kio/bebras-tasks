@@ -1,9 +1,16 @@
 /*
-new Place(0, 0, 80, 80, 'c4', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 80, height: 80}}),
-new Place(0, 0, 80, 80, 'c8', 2, {imageId: 'bg', crop: {x: 80, y: 0, width: 80, height: 80}}),
-new Place(0, 0, 80, 80, 'c16', 2, {imageId: 'bg', crop: {x: 160, y: 0, width: 80, height: 80}}),
+new Place(0, 0, 80, 80, 'c3', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 80, height: 80}}),
+new Place(0, 0, 80, 80, 'c4', 2, {imageId: 'bg', crop: {x: 80, y: 0, width: 80, height: 80}}),
+new Place(0, 0, 80, 80, 'c0', 2, {imageId: 'bg', crop: {x: 160, y: 0, width: 80, height: 80}}),
 new Place(0, 0, 80, 80, 'c1', 2, {imageId: 'bg', crop: {x: 240, y: 0, width: 80, height: 80}}),
 new Place(0, 0, 80, 80, 'c2', 2, {imageId: 'bg', crop: {x: 320, y: 0, width: 80, height: 80}}),
+
+<img src="/~res/2h-yg9UonE3VfwVTxxep1570522010485.svg" width="80" height="80" alt="an image" />
+<img src="/~res/hy5jo-VigG7rmAc5KLLv1570522019309.svg" width="80" height="80" alt="an image" />
+<img src="/~res/YcJtKYf_fDBe9DLyH3ma1570522036161.svg" width="80" height="80" alt="an image" />
+<img src="/~res/d2UN_m7VVidQyG4IcKnI1570522044453.svg" width="80" height="80" alt="an image" />
+<img src="/~res/TLxUgWc_xeTi_GThduMR1570522056816.svg" width="80" height="80" alt="an image" />
+
 */
 
 export class Task {
@@ -14,11 +21,11 @@ export class Task {
         let HEIGHT = 280;
 
         let coin_gens = [
-            j => new Place(0, 0, 80, 80, 'c0_' + j, 2, {imageId: 'bg', crop: {x: 240, y: 0, width: 80, height: 80}}),
-            j => new Place(84, 0, 80, 80, 'c1_' + j, 2, {imageId: 'bg', crop: {x: 320, y: 0, width: 80, height: 80}}),
-            j => new Place(168, 0, 80, 80, 'c2_' + j, 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 80, height: 80}}),
-            j => new Place(252, 0, 80, 80, 'c3_' + j, 2, {imageId: 'bg', crop: {x: 80, y: 0, width: 80, height: 80}}),
-            j => new Place(336, 0, 80, 80, 'c4_' + j, 2, {imageId: 'bg', crop: {x: 160, y: 0, width: 80, height: 80}})
+            j => new Place(0, 0, 80, 80, 'c4_' + j, 2, {imageId: 'bg', crop: {x: 80, y: 0, width: 80, height: 80}}),
+            j => new Place(84, 0, 80, 80, 'c3_' + j, 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 80, height: 80}}),
+            j => new Place(168, 0, 80, 80, 'c2_' + j, 2, {imageId: 'bg', crop: {x: 320, y: 0, width: 80, height: 80}}),
+            j => new Place(252, 0, 80, 80, 'c1_' + j, 2, {imageId: 'bg', crop: {x: 240, y: 0, width: 80, height: 80}}),
+            j => new Place(336, 0, 80, 80, 'c0_' + j, 2, {imageId: 'bg', crop: {x: 160, y: 0, width: 80, height: 80}})
         ];
 
         let places = [];
