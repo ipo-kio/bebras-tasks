@@ -18,8 +18,8 @@ export class Task {
             new Place(0, 0, 271, 400, 'question', 1, {imageId: 'bg', crop: {x: 0, y: 0, width: 271, height: 400}}),
 
             new Place(156, 162, 30, 30, 'x1', 0, {/*stroke: "red", strokeWidth: 2, dashArray: [4, 4]*/}),
-            new Place(28, 96, 30, 30, 'x1', 0, {/*stroke: "red", strokeWidth: 2, dashArray: [4, 4]*/}),
-            new Place(158, 236, 30, 30, 'x1', 0, {/*stroke: "red", strokeWidth: 2, dashArray: [4, 4]*/}),
+            new Place(28, 96, 30, 30, 'x2', 0, {/*stroke: "red", strokeWidth: 2, dashArray: [4, 4]*/}),
+            new Place(158, 236, 30, 30, 'x3', 0, {/*stroke: "red", strokeWidth: 2, dashArray: [4, 4]*/}),
 
             new Place(271, 285, 35, 35, 'r', 2, {imageId: 'bg', crop: {x: 271, y: 0, width: 35, height: 35}}),
             new Place(271, 325, 35, 35, 'u', 2, {imageId: 'bg', crop: {x: 306, y: 0, width: 35, height: 35}}),
