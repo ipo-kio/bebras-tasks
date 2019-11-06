@@ -40,6 +40,7 @@ export class UndoButton extends StatefulElement {
         ctx.lineWidth = 4;
         ctx.lineCap = 'round';
         ctx.translate(this.x, this.y);
+        this.ctx.textAlign = "left";
         ctx.beginPath();
         ctx.moveTo(M + L, M);
         ctx.lineTo(W - M - R, M);

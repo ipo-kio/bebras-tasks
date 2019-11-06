@@ -10,6 +10,7 @@ export class Task extends SimpleStatesTask {
     enabled = false;
     initCallback = null;
 
+    initialPattern;
     currentPattern;
     finalPattern;
 
@@ -18,13 +19,16 @@ export class Task extends SimpleStatesTask {
     constructor(container_id, images) {
         super(container_id, 620, 320);
 
-        this.ctx.font = 'bold 14px sans-serif';
-        let w = this.ctx.measureText('Получить: ');
+        this.ctx.font = '14px sans-serif';
+        let w = this.ctx.measureText('Получить: ').width + 4;
 
-        this.currentPattern = new Pattern(this.ctx, 6, 180, [SQUARE, SQUARE], 1);
-        this.finalPattern = new Pattern(this.ctx, 6 + w.width + 6, 240, FINAL_PATTERN, 0, false);
+        this.initialPattern = new Pattern(this.ctx, 6 + w + 6, 180, [SQUARE, SQUARE], 0, false);
+        this.currentPattern = new Pattern(this.ctx, 6 + w + 6, 224, [SQUARE, SQUARE], 1);
+        this.finalPattern = new Pattern(this.ctx, 6 + w + 6, 280, FINAL_PATTERN, 0, false);
 
         this.scene.draw_bg = () => {
+            this.initialPattern.draw();
+
             let overElement = this.scene.over_element;
             if (overElement !== null && overElement.pat1)
                 this.currentPattern.highlight(overElement.pat1.p);
@@ -32,9 +36,12 @@ export class Task extends SimpleStatesTask {
 
             this.ctx.fillStyle = 'black';
             this.ctx.textBaseline = "middle";
-            this.ctx.font = 'bold 14px sans-serif';
+            this.ctx.textAlign = "right";
+            this.ctx.font = '14px sans-serif';
+            this.ctx.fillText('Начало:', w, 180 + Pattern.height_by_size_id(1) / 2);
+            this.ctx.fillText('Текущее:', w, 228 + Pattern.height_by_size_id(1) / 2);
+            this.ctx.fillText('Получить:', w, 276 + Pattern.height_by_size_id(1) / 2);
 
-            this.ctx.fillText('Получить:', 9, 240 + Pattern.height_by_size_id(1) / 2);
             let solved = this.currentPattern.is(FINAL_PATTERN);
             this.finalPattern.opaque = solved;
             this.finalPattern.draw();
