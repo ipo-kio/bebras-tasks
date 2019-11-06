@@ -3,6 +3,8 @@ new Place(0, 0, 90, 90, 's00', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 90, 
 new Place(0, 0, 90, 90, 's11', 2, {imageId: 'bg', crop: {x: 90, y: 0, width: 90, height: 90}}),
 new Place(0, 0, 90, 90, 's10', 2, {imageId: 'bg', crop: {x: 180, y: 0, width: 90, height: 90}}),
 new Place(0, 0, 90, 90, 's01', 2, {imageId: 'bg', crop: {x: 270, y: 0, width: 90, height: 90}}),
+
+<p><img src="/~res/mIvg1ODUAy0BPyA9CB_a1572675358902.svg" alt="an image" /><img src="/~res/OhR2UQZknzR6EWCjdEi-1572675379643.svg" alt="an image" /><img src="/~res/rYGuyu2prTQb0nM1CvM41572675367375.svg" alt="an image" /><img src="/~res/TIaNfj3bZ-iUgiGczVW61572675389151.svg" alt="an image" /><img src="/~res/dr-VQ9Yczpz1MdzRSrDo1572675432002.svg" alt="an image" /></p><p><img src="/~res/Pj9CoGg924UV3xUd5gEC1572675456543.svg" alt="an image" /><img src="/~res/bi_JmPDx8LOXNuuoClHw1572675470302.svg" alt="an image" /></p><p><img src="/~res/D6G7coiR4_WSqqfVD8kV1572675477918.svg" alt="an image" /><img src="/~res/6U0M0a55j2D8o0lOuywW1572675487873.svg" alt="an image" /></p>
  */
 
 export class Task {

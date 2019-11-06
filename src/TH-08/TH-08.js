@@ -2,6 +2,8 @@
  new Place(0, 0, 50, 67, 'orange', 2, {imageId: 'bg', crop: {x: 54, y: 236, width: 50, height: 67}}),
  new Place(0, 0, 54, 67, 'gray', 2, {imageId: 'bg', crop: {x: 0, y: 236, width: 54, height: 67}}),
  new Place(0, 0, 506, 236, 'bg', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 506, height: 236}}),
+
+ <p><img src="/~res/7S-Wm4-kkSZrJbnZMjM41570528634266.svg" alt="an image" /><img src="/~res/DyFdQuv5NeAajzSXBHYo1570528811089.svg" alt="an image" /><img src="/~res/Q8wAxWn2TMCI40Wube6l1570528817935.svg" alt="an image" /></p>
  */
 
 export class Task {
