@@ -17,6 +17,12 @@ export class Pattern {
         this.p = p;
         this.size_ind = size_ind;
         this.opaque = opaque;
+
+        this.ctx.save();
+        this.ctx.fillStyle = 'black';
+        this.ctx.font = '14px sans-serif';
+        this.emptyWidth = this.ctx.measureText('[пусто]').width;
+        this.ctx.restore();
     }
 
     draw() {
@@ -56,6 +62,14 @@ export class Pattern {
             }
 
             ctx.translate(size + 2 * margin, 0);
+        }
+
+        if (this.p.length === 0) {
+            this.ctx.fillStyle = 'black';
+            this.ctx.textBaseline = "middle";
+            this.ctx.textAlign = "left";
+            this.ctx.font = '14px sans-serif';
+            this.ctx.fillText('[пусто]', 0, size / 2);
         }
 
         ctx.restore();
@@ -106,7 +120,7 @@ export class Pattern {
 
     get width() {
         if (this.p.length === 0)
-            return 2 * MARGIN[this.size_ind] + 8;
+            return 2 * MARGIN[this.size_ind] + this.emptyWidth;
         return this.p.length * (2 * MARGIN[this.size_ind] + SIZE[this.size_ind]);
     }
 
