@@ -334,7 +334,7 @@ var App = function (elementID, _width, _height, _pictures, _places, _auto_start,
                         dstY = Math.round(dstY);
                         so.setX(dstX);
                         so.setY(dstY);
-                        this.setZIndex(1000);
+                        so.setZIndex(1000);
                         places[objectId].current = key; // точно, place.id это индекс места
                     }
                 }
