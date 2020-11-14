@@ -4,7 +4,7 @@ export class Task {
     //container - is an id of element
     constructor(container, pictures) {
         let WIDTH = 610;
-        let HEIGHT = 300;
+        let HEIGHT = 360;
 
         let dy = 4;
         let dh = 44;
@@ -16,11 +16,11 @@ export class Task {
             new Place(340, dy + 2 * dh, 268, 42, 'blanc3', 0, {imageId: 'bg', crop: {x: 1072, y: 137, width: 268, height: 42}}),
             new Place(340, dy + 3 * dh, 268, 42, 'blanc4', 0, {imageId: 'bg', crop: {x: 1072, y: 137, width: 268, height: 42}}),
             new Place(340, dy + 4 * dh, 268, 42, 'blanc5', 0, {imageId: 'bg', crop: {x: 1072, y: 137, width: 268, height: 42}}),
-            new Place(0, 220, 268, 42, '0-2112411111', 2, {imageId: 'bg', crop: {x: 0, y: 137, width: 268, height: 42}}),
-            new Place(270, 220, 268, 42, '1-321231111', 2, {imageId: 'bg', crop: {x: 268, y: 137, width: 268, height: 42}}),
-            new Place(540, 220, 268, 42, '0-21212151', 2, {imageId: 'bg', crop: {x: 536, y: 137, width: 268, height: 42}}),
-            new Place(0, 270, 268, 42, '1-3131331', 2, {imageId: 'bg', crop: {x: 804, y: 137, width: 268, height: 42}}),
-            new Place(270, 270, 268, 42, '1-3213123', 2, {imageId: 'bg', crop: {x: 1340, y: 137, width: 268, height: 42}}),
+            new Place(7, 220, 268, 42, '0-2112411111', 2, {imageId: 'bg', crop: {x: 0, y: 137, width: 268, height: 42}}),
+            new Place(310, 240, 268, 42, '1-321231111', 2, {imageId: 'bg', crop: {x: 268, y: 137, width: 268, height: 42}}),
+            new Place(40, 263, 268, 42, '0-21212151', 2, {imageId: 'bg', crop: {x: 536, y: 137, width: 268, height: 42}}),
+            new Place(20, 307, 268, 42, '1-3131331', 2, {imageId: 'bg', crop: {x: 804, y: 137, width: 268, height: 42}}),
+            new Place(300, 290, 268, 42, '1-3213123', 2, {imageId: 'bg', crop: {x: 1340, y: 137, width: 268, height: 42}}),
         ];
 
         this.ddlib = new App(container, WIDTH, HEIGHT, pictures, places, true);

@@ -10,7 +10,7 @@ public class IE_01b {
 
     public static void main(String[] args) throws IOException {
         Pics pics = new Pics(TASK_NAME, new File(TASKS_DIRECTORY), 1);
-//        pics.writePNGTinify();
+        pics.writePNGTinify();
         pics.writePNG();
         pics.writeDDlibPlaces();
     }
