@@ -1,4 +1,4 @@
-import {StatefulElement} from "../lib/StatefulElement";
+import {StatefulElement} from "../../lib/StatefulElement";
 import {Pattern} from "./Pattern";
 
 const ARROW_WIDTH = 40;

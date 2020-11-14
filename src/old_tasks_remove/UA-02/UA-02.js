@@ -1,4 +1,4 @@
-import {SimpleStatesTask} from "../lib/SimpleStatesTask";
+import {SimpleStatesTask} from "../../lib/SimpleStatesTask";
 import {TransitionButton} from "./TransitionButton";
 import {CIRCLE, Pattern, SQUARE, TRIANG} from "./Pattern";
 import {UndoButton} from "./UndoButton";

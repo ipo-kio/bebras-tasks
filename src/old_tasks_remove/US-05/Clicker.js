@@ -1,4 +1,4 @@
-import {StatefulElement} from "../lib/StatefulElement";
+import {StatefulElement} from "../../lib/StatefulElement";
 
 export const W = 85, N = 5;
 

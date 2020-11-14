@@ -1,4 +1,4 @@
-import {SimpleStatesTask} from "../lib/SimpleStatesTask";
+import {SimpleStatesTask} from "../../lib/SimpleStatesTask";
 import {Statement} from "./Statement";
 
 export class Task extends SimpleStatesTask {

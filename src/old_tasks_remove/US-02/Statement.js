@@ -1,4 +1,4 @@
-import {StatefulElement} from "../lib/StatefulElement";
+import {StatefulElement} from "../../lib/StatefulElement";
 
 const SKIP = 8;
 const LABEL_FONT = 'bold 18px sans-serif';

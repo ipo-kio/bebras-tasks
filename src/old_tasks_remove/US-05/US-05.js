@@ -8,7 +8,7 @@
  *  <p><img src="/~res/P8aNbbKFHb8fw32FjATl1570990240082.svg" alt="an image" /><img src="/~res/SIK3mOXj2FrCdA5PHqg61570990273287.png" alt="an image" /></p>
  *
  */
-import {SimpleStatesTask} from "../lib/SimpleStatesTask";
+import {SimpleStatesTask} from "../../lib/SimpleStatesTask";
 import {Clicker, W, N} from "./Clicker";
 
 const X0 = 6, Y0 = 6;

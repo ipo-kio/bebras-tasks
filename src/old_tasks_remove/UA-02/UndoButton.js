@@ -1,4 +1,4 @@
-import {StatefulElement} from "../lib/StatefulElement";
+import {StatefulElement} from "../../lib/StatefulElement";
 
 const W = 30;
 const H = 24;

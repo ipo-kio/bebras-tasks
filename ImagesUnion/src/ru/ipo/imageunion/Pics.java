@@ -1,6 +1,5 @@
 package ru.ipo.imageunion;
 
-import com.sun.imageio.plugins.png.PNGImageWriter;
 import com.tinify.Source;
 import com.tinify.Tinify;
 
