@@ -6,8 +6,8 @@ export class Task {
 
     //container - is an id of element
     constructor(container, pictures) {
-        let WIDTH = 513 + 4 + 72 + 4;
-        let HEIGHT = 321 + 4 + 72 + 4;
+        let WIDTH = 513 + 4 + 72 + 4 + 80 + 80;
+        let HEIGHT = 321 + 4 + 72 + 4 - 72;
 
         let places = [
             new Place(4, 4, 513, 321, 'field', 1, {imageId: 'bg', crop: {x: 0, y: 0, width: 513, height: 321}}),
@@ -25,15 +25,11 @@ export class Task {
     ];
 
         let x0 = 513 + 4 + 4;
-        let y0 = 321 + 4 + 4;
+        // let y0 = 321 + 4 + 4;
+        let y0 = 8;
         for (let i = 1; i < places.length; i++) {
-            if (i <= 5) {
-                places[i].y = y0 - (i - 1) * 80;
-                places[i].x = x0;
-            } else {
-                places[i].x = x0 - (i - 5) * 80;
-                places[i].y = y0;
-            }
+            places[i].x = x0 + Math.floor((i - 1) / 4) * 80;
+            places[i].y = y0 + Math.floor((i - 1) % 4) * 80;
         }
 
         let holes = [
