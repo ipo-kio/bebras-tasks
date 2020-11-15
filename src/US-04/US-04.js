@@ -10,7 +10,7 @@ export class Task {
         let HEIGHT = 321 + 4 + 72 + 4;
 
         let places = [
-            new Place(4, 4, 513, 321, 'field', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 513, height: 321}}),
+            new Place(4, 4, 513, 321, 'field', 1, {imageId: 'bg', crop: {x: 0, y: 0, width: 513, height: 321}}),
             new Place(0, 0, 72, 72, 'zebra', 2, {imageId: 'bg', crop: {x: 0, y: 321, width: 72, height: 72}}),
             new Place(0, 0, 72, 72, 'cat', 2, {imageId: 'bg', crop: {x: 360, y: 321, width: 72, height: 72}}),
             new Place(0, 0, 72, 72, 'crocodile', 2, {imageId: 'bg', crop: {x: 72, y: 321, width: 72, height: 72}}),
