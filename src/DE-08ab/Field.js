@@ -80,6 +80,31 @@ export class Field {
                     if (c === 3)
                         return 1;
                 }
+
+        //check for the second type
+        //sum by rows and columns
+        let a = [0, 0, 0];
+        let b = [0, 0, 0];
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++) {
+                let ee = e[i][j].state;
+                a[i] += ee;
+                b[j] += ee;
+            }
+        let a_is_111 = a[0] === 1 && a[1] === 1 && a[2] === 1;
+        let b_is_111 = b[0] === 1 && b[1] === 1 && b[2] === 1;
+        if (!a_is_111 && !b_is_111)
+            return -1;
+        if (a_is_111)
+            a = b;
+
+        //now a should be 120 or 210 or 012 or 021
+        if (a[1] === 0)
+            return -1;
+        if (a[0] === 3 || a[1] === 3 || a[2] === 3)
+            return -1;
+
+        return 2;
     }
 }
 

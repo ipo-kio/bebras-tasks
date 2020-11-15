@@ -12,7 +12,7 @@ export class Task extends SimpleStatesTask {
 
     //container - is an id of element
     constructor(container) {
-        super(container, 2 * X0 + SKIP * (NUMBER_OF_FIELDS - 1) + D * 3 * NUMBER_OF_FIELDS, 2 * Y0 + 3 * D, draw_bg, true);
+        super(container, 2 * X0 + SKIP * (NUMBER_OF_FIELDS - 1) + D * 3 * NUMBER_OF_FIELDS, 4 + Y0 + 3 * D, draw_bg, true);
 
         let self = this;
         function draw_bg(ctx) {
@@ -30,7 +30,35 @@ export class Task extends SimpleStatesTask {
     }
 
     updateText() {
-        this.textDiv.innerText = "Выбрано слишком много ячеек, нужно выбрать 4\nasdf asdf";
+        let types;
+        if (NUMBER_OF_FIELDS === 3)
+            types = [0, 0, 0];
+        else
+            types = [0, 0, 0, 0];
+
+        let text = '';
+
+        let typeCount = [0, 0, 0, 0];
+        for (let i = 0; i < NUMBER_OF_FIELDS; i++) {
+            let type = this.fields[i].getBominoType();
+            if (type === -1) {
+                text += "В поле " + i + " не бомино\n";
+            } else {
+                typeCount[type]++;
+            }
+            if (type === 0 && NUMBER_OF_FIELDS === 3) {
+                text += "В поле " + i + " пусто\n";
+            }
+            types[i] = type;
+        }
+
+        if (typeCount[1] > 1 || typeCount[2] > 1 || typeCount[3] > 1) {
+            text += "Есть одинаковые бомино\n";
+            console.log('types', types);
+        }
+
+        this.textDiv.style.color = text === '' ? "black" : "red";
+        this.textDiv.innerText = text;
     }
 
     loadSolution(solution) {
