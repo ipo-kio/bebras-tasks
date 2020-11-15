@@ -55,7 +55,7 @@ export class Task extends SimpleStatesTask {
 
         this.textDiv = document.createElement("div");
         this.textDiv.style.marginLeft = "4px";
-        document.getElementById(container).appendChild(this.textDiv);
+        // document.getElementById(container).appendChild(this.textDiv);
     }
 
     check() {
