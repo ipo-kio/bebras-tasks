@@ -30,31 +30,7 @@ export class Task extends SimpleStatesTask {
     }
 
     updateText() {
-        let cnt = 0;
-        for (let el of this.scene.elements)
-            if (el.state === 1)
-                cnt++;
-        switch (cnt) {
-            case 0:
-                this.textDiv.innerText = "Выберите 4 ячейки";
-                break;
-            case 1:
-                this.textDiv.innerText = "Осталось выбрать 3 ячейки ";
-                break;
-            case 2:
-                this.textDiv.innerText = "Осталось выбрать 2 ячейки";
-                break;
-            case 3:
-                this.textDiv.innerText = "Осталось выбрать 1 ячейку";
-                break;
-            case 4:
-                this.textDiv.innerText = "Выбрано 4 ячейки";
-                break;
-            default:
-                this.textDiv.innerText = "Выбрано слишком много ячеек, нужно выбрать 4";
-        }
-
-        this.textDiv.style.color = cnt === 4 ? "black" : "red";
+        this.textDiv.innerText = "Выбрано слишком много ячеек, нужно выбрать 4\nasdf asdf";
     }
 
     loadSolution(solution) {

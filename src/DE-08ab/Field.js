@@ -22,7 +22,7 @@ export class Field {
         this.ctx.font = "1em sans-serif";
         this.ctx.textBaseline = "alphabetic";
         this.ctx.textAlign = "center";
-        this.ctx.fillText(this.i + ".", this.x0 + 1.5 * this.d, this.y0 - 2);
+        this.ctx.fillText(this.i, this.x0 + 1.5 * this.d, this.y0 - 8);
 
         this.ctx.restore();
     }
@@ -43,6 +43,43 @@ export class Field {
             }
             this.elements_cell.push(row);
         }
+    }
+
+    /**
+     * gets bomino type
+     * @returns {number}
+     * -1 means not a 3-bomino at all
+     * 0 means empty
+     * 1, 2, 3 means types from the correct answer
+     */
+    getBominoType() {
+        let cnt = 0;
+        for (let el of this.elements)
+            cnt += el.state;
+        if (cnt === 0)
+            return 0;
+        if (cnt !== 3)
+            return -1;
+
+        let e = this.elements_cell;
+
+        // check for the third type
+        if (e[1][1].state === 1 && (e[0][0].state === 1 && e[2][2].state === 1 || e[0][2].state === 1 && e[2][0].state === 1))
+            return 3;
+
+        // check for the first type
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (e[i][j].state === 0) {
+                    let c = 0;
+                    if (i > 0) c += e[i - 1][j].state;
+                    if (j > 0) c += e[i][j - 1].state;
+                    if (i < 2) c += e[i + 1][j].state;
+                    if (j < 2) c += e[i][j + 1].state;
+
+                    if (c === 3)
+                        return 1;
+                }
     }
 }
 
