@@ -1,10 +1,14 @@
-import {RectangleStatefulElement, SimpleStatesTask} from "../lib/SimpleStatesTask";
+import {SimpleStatesTask} from "../lib/SimpleStatesTask";
+import {StatefulElement} from "../lib/StatefulElement";
 
-const X0 = 4;
-const Y0 = 4;
-const D = 20;
+const X0 = 12;
+const Y0 = 12;
+const D = 36;
+const M = 6;
 const N = 6;
-const R = 4;
+const R = 6;
+const LINE_WIDTH = 4;
+const CARPET_WIDTH = 6;
 const CIRCLE_COLOR = '#009d95';
 const LINE_COLOR = '#f0ce51';
 const CARPET_COLOR = '#b65200';
@@ -13,54 +17,33 @@ export class Task extends SimpleStatesTask {
 
     //container - is an id of element
     constructor(container, images) {
-        super(container, 2 * X0 + MAP[0].length * D, 2 * Y0 + MAP.length * D, draw_bg, true);
+        super(container, 2 * X0 + N * D, 2 * Y0 + M * D, draw_bg, true);
 
         function draw_bg(ctx) {
             ctx.save();
             ctx.translate(X0, Y0);
 
-            //draw border
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "black";
-            for (let i = 0; i < MAP.length; i++) {
-                for (let j = 0; j < MAP[i].length; j++) {
-                    let x0 = j * D;
-                    let y0 = i * D;
+            ctx.beginPath();
+            ctx.strokeStyle = LINE_COLOR;
+            ctx.lineWidth = LINE_WIDTH;
+            for (let i = 0; i < M; i++) {
+                ctx.moveTo(0, i * D);
+                ctx.lineTo((N - 1) * D, i * D);
+            }
+            for (let j = 0; j < N; j++) {
+                ctx.moveTo(j * D, 0);
+                ctx.lineTo(j * D, (M - 1) * D);
+            }
+            ctx.stroke();
 
-                    if (MAP[i][j] === '0')
-                        continue;
-
-                    //draw over
-                    if (i === 0 || MAP[i - 1][j] === '0') {
-                        ctx.beginPath();
-                        ctx.moveTo(x0, y0);
-                        ctx.lineTo(x0 + D, y0);
-                        ctx.stroke();
-                    }
-
-                    //draw left
-                    if (j === 0 || MAP[i][j - 1] === '0') {
-                        ctx.beginPath();
-                        ctx.moveTo(x0, y0);
-                        ctx.lineTo(x0, y0 + D);
-                        ctx.stroke();
-                    }
-
-                    //draw right
-                    if (j === MAP[i].length - 1 || MAP[i][j + 1] === '0') {
-                        ctx.beginPath();
-                        ctx.moveTo(x0 + D, y0);
-                        ctx.lineTo(x0 + D, y0 + D);
-                        ctx.stroke();
-                    }
-
-                    //draw under
-                    if (i === MAP.length - 1 || MAP[i + 1][j] === '0') {
-                        ctx.beginPath();
-                        ctx.moveTo(x0, y0 + D);
-                        ctx.lineTo(x0 + D, y0 + D);
-                        ctx.stroke();
-                    }
+            ctx.fillStyle = CIRCLE_COLOR;
+            for (let i = 0; i < M; i++) {
+                for (let j = 0; j < N; j++) {
+                    let x = j * D;
+                    let y = i * D;
+                    ctx.beginPath();
+                    ctx.arc(x, y, R, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
 
@@ -110,36 +93,79 @@ export class Task extends SimpleStatesTask {
 
     createElements() {
         let el = [];
-        console.log(this);
 
-        for (let i = 0; i < MAP.length; i++) {
-            for (let j = 0; j < MAP[i].length; j++) {
-                if (MAP[i][j] === '1')
-                    el.push(new Cell(this.ctx, this, j, i));
-            }
-        }
+        for (let i = 0; i < M; i++)
+            for (let j = 0; j < N - 1; j++)
+                el.push(new Edge(this.ctx, this, i, j, i, j + 1));
+
+        for (let i = 0; i < M - 1; i++)
+            for (let j = 0; j < N; j++)
+                el.push(new Edge(this.ctx, this, i, j, i + 1, j));
+
+        console.log(el);
 
         return el;
     }
 }
 
-class Cell extends RectangleStatefulElement {
+class Edge extends StatefulElement {
 
-    constructor(ctx, task, i, j) {
-        super(ctx, 2, [1, 0], X0 + i * D, Y0 + j * D, D, D);
+    constructor(ctx, task, i1, j1, i2, j2) {
+        super(ctx, 2, [1, 0]);
+
+        this.i1 = i1;
+        this.i2 = i2;
+        this.j1 = j1;
+        this.j2 = j2;
 
         this.clickHandler = function() {
             task.updateText();
         }
     }
 
-    draw() {
-        this.ctx.save();
-        this.ctx.fillStyle = this.state === 0 ? '#EEE' : 'blue';
-        this.ctx.strokeStyle = '#AAA';
-        this.ctx.lineWidth = 1;
+    begin_outline_path() {
+        console.log('here');
+
+        let d = 6;
+        let c = this.ctx;
+        c.beginPath();
+        let x1 = X0 + this.j1 * D;
+        let x2 = X0 + this.j2 * D;
+        let y1 = Y0 + this.i1 * D;
+        let y2 = Y0 + this.i2 * D;
+        c.moveTo(x1, x2);
+        if (this.i1 === this.i2) {
+            c.lineTo(x1 + d, y1 - d);
+            c.lineTo(x2 - d, y1 - d);
+            c.lineTo(x2, y2);
+            c.lineTo(x2 - d, y1 + d);
+            c.lineTo(x1 + d, y1 + d);
+            c.closePath();
+        } else {
+            c.lineTo(x1 + d, y1 + d);
+            c.lineTo(x1 + d, y2 - d);
+            c.lineTo(x1, y2);
+            c.lineTo(x1 - d, y2 - d);
+            c.lineTo(x1 - d, y1 + d);
+            c.closePath();
+        }
+    }
+
+    hit_test({x, y}) {
         this.begin_outline_path();
-        this.ctx.fill();
+        return this.ctx.isPointInPath(x, y);
+    }
+
+    draw() {
+        if (this.state === 0)
+            return;
+
+        this.ctx.save();
+        this.ctx.lineWidth = CARPET_WIDTH;
+        this.ctx.strokeStyle = CARPET_COLOR;
+        this.ctx.translate(X0, Y0);
+        this.ctx.moveTo(this.j1 * D, this.i1 * D);
+        this.ctx.lineTo(this.j2 * D, this.i2 * D);
         this.ctx.stroke();
         this.ctx.restore();
     }
