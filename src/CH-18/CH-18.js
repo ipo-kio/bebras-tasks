@@ -96,7 +96,7 @@ export class Task {
 
     loadSolution(solution) {
         if (!solution)
-            solution = '{"9":1,"10":2,"11":3,"12":4,"13":5,"14":6,"15":7,"16":8}';
+            solution = '{"9":1,"10":4,"11":5,"12":8,"13":2,"14":6,"15":3,"16":7}';
 
         var result = this.ddlib.loadSolution(solution);
 
