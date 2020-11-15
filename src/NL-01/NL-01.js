@@ -3,11 +3,11 @@ import {StatefulElement} from "../lib/StatefulElement";
 
 const X0 = 12;
 const Y0 = 12;
-const D = 36;
+const D = 42;
 const M = 6;
 const N = 6;
-const R = 6;
-const LINE_WIDTH = 4;
+const R = 8;
+const LINE_WIDTH = 3;
 const CARPET_WIDTH = 8;
 const CIRCLE_COLOR = '#009d95';
 const LINE_COLOR = '#f0ce51';
@@ -17,7 +17,7 @@ export class Task extends SimpleStatesTask {
 
     //container - is an id of element
     constructor(container, images) {
-        super(container, 2 * X0 + N * D, 2 * Y0 + M * D, draw_bg, true);
+        super(container, 2 * X0 + (N - 1) * D, 2 * Y0 + (M - 1) * D, draw_bg, true);
 
         function draw_bg(ctx) {
             ctx.save();
@@ -58,32 +58,85 @@ export class Task extends SimpleStatesTask {
         document.getElementById(container).appendChild(this.textDiv);
     }
 
-    updateText() {
-        let cnt = 0;
-        for (let el of this.scene.elements)
-            if (el.state === 1)
-                cnt++;
-        switch (cnt) {
-            case 0:
-                this.textDiv.innerText = "Выберите 4 ячейки";
-                break;
-            case 1:
-                this.textDiv.innerText = "Осталось выбрать 3 ячейки ";
-                break;
-            case 2:
-                this.textDiv.innerText = "Осталось выбрать 2 ячейки";
-                break;
-            case 3:
-                this.textDiv.innerText = "Осталось выбрать 1 ячейку";
-                break;
-            case 4:
-                this.textDiv.innerText = "Выбрано 4 ячейки";
-                break;
-            default:
-                this.textDiv.innerText = "Выбрано слишком много ячеек, нужно выбрать 4";
+    check() {
+        //0 means ok
+        //1 means not connected
+        //2 means not every path
+        //3 means too many edges
+
+        //Kraskal to check connectness
+        let vertex_color = new Array(M * N);
+        let vertex_type = new Array(M * N);
+        for (let i = 0; i < M * N; i++) {
+            vertex_color[i] = i + 1;
+            vertex_type[i] = 0; //0 not visited
         }
 
-        this.textDiv.style.color = cnt === 4 ? "black" : "red";
+        let count_edges = 0;
+        for (let el of this.scene.elements) {
+            if (el.state !== 1)
+                continue;
+            count_edges++;
+
+            let ind1 = el.ind1();
+            let ind2 = el.ind2();
+            processType(el.i1, el.j1, ind1);
+            processType(el.i2, el.j2, ind2);
+
+            let c1 = vertex_color[ind1];
+            let c2 = vertex_color[ind2];
+            for (let v = 0; v < M * N; v++)
+                if (vertex_color[v] === c1)
+                    vertex_color[v] = c2;
+        }
+
+        function processType(i, j, ind) {
+            vertex_type[ind] = 2;
+            if (j > 0 && vertex_type[ind - 1] === 0)
+                vertex_type[ind - 1] = 1;
+            if (j < N - 1 && vertex_type[ind + 1] === 0)
+                vertex_type[ind + 1] = 1;
+            if (i > 0 && vertex_type[ind - N] === 0)
+                vertex_type[ind - N] = 1;
+            if (i < M - 1 && vertex_type[ind + N] === 0)
+                vertex_type[ind + N] = 1;
+        }
+
+        let color = -1;
+        for (let v = 0; v < M * N; v++) {
+            if (vertex_type[v] === 0)
+                return 2;
+
+            if (vertex_type[v] === 2) {
+                let new_color = vertex_color[v];
+                if (color === -1)
+                    color = new_color;
+                else if (color !== new_color)
+                    return 1;
+            }
+        }
+
+        if (count_edges === Math.min(2 * (M - 1) + N - 3, 2 * (N - 1) + M - 3))
+            return 0;
+        else
+            return 3;
+    }
+
+    updateText() {
+        let c = this.check();
+
+        let text = '';
+        switch (c) {
+            case 1:
+                text = "По ковровой дорожке можно дойти не до всех фонтанов";
+                break;
+            case 2:
+                text = "Ковровая дорожка не проходит мимо всех фонтанов";
+                break;
+        }
+
+        this.textDiv.innerText = text;
+        this.textDiv.style.color = "red";
     }
 
     loadSolution(solution) {
@@ -105,6 +158,11 @@ export class Task extends SimpleStatesTask {
         console.log(el);
 
         return el;
+    }
+
+    getAnswer() {
+        let c = this.check();
+        return c === 0 ? 1 : 0;
     }
 }
 
@@ -159,13 +217,26 @@ class Edge extends StatefulElement {
             return;
 
         this.ctx.save();
-        this.ctx.lineWidth = CARPET_WIDTH;
-        this.ctx.strokeStyle = CARPET_COLOR;
         this.ctx.translate(X0, Y0);
         this.ctx.beginPath();
         this.ctx.moveTo(this.j1 * D, this.i1 * D);
         this.ctx.lineTo(this.j2 * D, this.i2 * D);
+
+        this.ctx.lineWidth = CARPET_WIDTH + 2;
+        this.ctx.strokeStyle = 'black';
         this.ctx.stroke();
+        this.ctx.lineWidth = CARPET_WIDTH;
+        this.ctx.strokeStyle = CARPET_COLOR;
+        this.ctx.stroke();
+
         this.ctx.restore();
+    }
+
+    ind1() {
+        return this.i1 * N + this.j1;
+    }
+
+    ind2() {
+        return this.i2 * N + this.j2;
     }
 }
