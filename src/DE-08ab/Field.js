@@ -15,7 +15,7 @@ export class Field {
 
     drawBg() {
         this.ctx.save();
-        this.fillStyle = "black";
+        this.fillStyle = "rgba(0, 0, 0, 1)";
         this.lineWidth = 2;
         this.ctx.strokeRect(this.x0, this.y0, 3 * this.d, 3 * this.d);
 
