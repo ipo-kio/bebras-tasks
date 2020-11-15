@@ -8,7 +8,7 @@ const M = 6;
 const N = 6;
 const R = 6;
 const LINE_WIDTH = 4;
-const CARPET_WIDTH = 6;
+const CARPET_WIDTH = 8;
 const CIRCLE_COLOR = '#009d95';
 const LINE_COLOR = '#f0ce51';
 const CARPET_COLOR = '#b65200';
@@ -124,16 +124,14 @@ class Edge extends StatefulElement {
     }
 
     begin_outline_path() {
-        console.log('here');
-
-        let d = 6;
         let c = this.ctx;
         c.beginPath();
         let x1 = X0 + this.j1 * D;
         let x2 = X0 + this.j2 * D;
         let y1 = Y0 + this.i1 * D;
         let y2 = Y0 + this.i2 * D;
-        c.moveTo(x1, x2);
+        c.moveTo(x1, y1);
+        let d = 6;
         if (this.i1 === this.i2) {
             c.lineTo(x1 + d, y1 - d);
             c.lineTo(x2 - d, y1 - d);
@@ -164,6 +162,7 @@ class Edge extends StatefulElement {
         this.ctx.lineWidth = CARPET_WIDTH;
         this.ctx.strokeStyle = CARPET_COLOR;
         this.ctx.translate(X0, Y0);
+        this.ctx.beginPath();
         this.ctx.moveTo(this.j1 * D, this.i1 * D);
         this.ctx.lineTo(this.j2 * D, this.i2 * D);
         this.ctx.stroke();
