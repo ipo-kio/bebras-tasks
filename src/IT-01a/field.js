@@ -45,6 +45,13 @@ export class Field {
         if (this.selected_view === null)
             return;
 
+        //remove selected views from stacks
+        for (let stack_index = 0; stack_index <= 1; stack_index++) {
+            let ind = this.stacks[stack_index].indexOf(this.selected_view);
+            if (ind >= 0)
+                this.stacks[stack_index].splice(ind, 1);
+        }
+
         this.drag_dx = x - this.selected_view.x;
         this.drag_dy = y - this.selected_view.y;
     }
@@ -56,27 +63,16 @@ export class Field {
         this.selected_view.x = x - this.drag_dx;
         this.selected_view.y = y - this.drag_dy;
 
+        /*function same_position(p1, p2) {
+            if (p1 === p2)
+                return true;
+            if (p1 === null || p2 === null)
+                return false;
+            return p1.stack_index === p2.stack_index && p1.index_in_stack === p2.index_in_stack;
+        }*/
+
         let position = this.find_position(this.selected_view);
-        if (position !== this.current_stack_position) {
-            this.current_stack_position = position;
-
-            for (let stack_index = 0; stack_index <= 1; stack_index++) {
-                let x = STACK_X_BOTTOMS[stack_index];
-                let y = STACK_Y_BOTTOM;
-                let i = 0;
-                for (let view of this.stacks[stack_index]) {
-                    view.x = x;
-                    view.y = y;
-                    y -= HEIGHT * view.lines;
-
-                    if (position !== null && position.stack_index === stack_index && position.index_in_stack === i)
-                        y -= HEIGHT * this.selected_view.lines;
-
-                    i++;
-                }
-            }
-        }
-
+        this.place_views(position, this.selected_view);
 
         this.redraw();
     }
@@ -104,16 +100,11 @@ export class Field {
         let index_in_stack = 0;
         for (let view of this.stacks[stack_index]) {
             view.x = x;
-            view.y = y;
             y -= HEIGHT * view.lines;
-            let y1 = y + view.lines * HEIGHT / 2;
-            if (y1 < y0)
-                return {
-                    stack_index,
-                    index_in_stack
-                };
-
-            index_in_stack++;
+            view.y = y;
+            let y1 = y; // + view.lines * HEIGHT / 2;
+            if (y1 > y0)
+                index_in_stack++;
         }
 
         return {
@@ -122,22 +113,52 @@ export class Field {
         };
     }
 
+    place_views(position, inner_view) {
+        let skip_stack_index, skip_index_in_stack, skip_height;
+
+        if (position === null) {
+            skip_stack_index = -1;
+            skip_index_in_stack = -1;
+            skip_height = -1;
+        } else {
+            skip_stack_index = position.stack_index;
+            skip_index_in_stack = position.index_in_stack;
+            skip_height = inner_view.lines * HEIGHT;
+        }
+
+        for (let view of this.views)
+            if (view !== inner_view) {
+                view.x = view.initial_x;
+                view.y = view.initial_y;
+            }
+
+        for (let stack_index = 0; stack_index <= 1; stack_index++) {
+            let y = STACK_Y_BOTTOM;
+            let x = STACK_X_BOTTOMS[stack_index];
+            let i = 0;
+            for (let view of this.stacks[stack_index]) {
+                y -= view.lines * HEIGHT;
+                if (stack_index === skip_stack_index && i === skip_index_in_stack)
+                    y -= skip_height;
+                if (view !== inner_view) {
+                    view.x = x;
+                    view.y = y;
+                }
+                i++;
+            }
+        }
+    }
+
     mouseup({x, y}) {
         if (this.selected_view === null)
             return;
 
         let position = this.find_position(this.selected_view);
-        if (position === null)
-            this.selected_view.move_back();
-        else {
-            let {stack_index, index_in_stack} = position;
-            this.stacks[stack_index].splice(index_in_stack, 0, this.selected_view);
-            this.selected_view.x = STACK_X_BOTTOMS[stack_index];
-            if (index_in_stack === 0)
-                this.selected_view.y = STACK_Y_BOTTOM;
-            else
-                this.selected_view.y = this.stacks[stack_index][index_in_stack - 1].y - this.selected_view.length * HEIGHT;
-        }
+
+        if (position !== null)
+            this.stacks[position.stack_index].splice(position.index_in_stack, 0, this.selected_view);
+
+        this.place_views(null, null);
         this.selected_view = null;
 
         this.redraw();
