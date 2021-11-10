@@ -1,15 +1,18 @@
 import {HEIGHT, StackView, WIDTH} from "./stack";
 import mouse_coordinates from "../lib/MouseCoordinates";
 
-const STACK_Y_BOTTOM = 300;
-const STACK_X_BOTTOMS = [10, 10 + WIDTH + 16];
+const STACK_Y_BOTTOM = 260;
+const STACK_X_BOTTOMS = [30, 30 + WIDTH + 40];
+const SKIP = 0;
+const BRACKETS_WIDTH = 6;
+const BRACKETS_OUT = 2;
 
 export class Field {
 
     selected_view = null;
 
     stacks = [[], []]; // indexes of views
-    current_stack_position = null;
+    highlighted_stack = -1;
 
     constructor(canvas, stacks) {
         this.canvas = canvas;
@@ -63,16 +66,13 @@ export class Field {
         this.selected_view.x = x - this.drag_dx;
         this.selected_view.y = y - this.drag_dy;
 
-        /*function same_position(p1, p2) {
-            if (p1 === p2)
-                return true;
-            if (p1 === null || p2 === null)
-                return false;
-            return p1.stack_index === p2.stack_index && p1.index_in_stack === p2.index_in_stack;
-        }*/
-
         let position = this.find_position(this.selected_view);
         this.place_views(position, this.selected_view);
+
+        if (position !== null)
+            this.highlighted_stack = position.stack_index;
+        else
+            this.highlighted_stack = -1;
 
         this.redraw();
     }
@@ -100,7 +100,7 @@ export class Field {
         let index_in_stack = 0;
         for (let view of this.stacks[stack_index]) {
             view.x = x;
-            y -= HEIGHT * view.lines;
+            y -= HEIGHT * view.lines + SKIP;
             view.y = y;
             let y1 = y; // + view.lines * HEIGHT / 2;
             if (y1 > y0)
@@ -137,9 +137,9 @@ export class Field {
             let x = STACK_X_BOTTOMS[stack_index];
             let i = 0;
             for (let view of this.stacks[stack_index]) {
-                y -= view.lines * HEIGHT;
+                y -= view.lines * HEIGHT + SKIP;
                 if (stack_index === skip_stack_index && i === skip_index_in_stack)
-                    y -= skip_height;
+                    y -= skip_height + SKIP;
                 if (view !== inner_view) {
                     view.x = x;
                     view.y = y;
@@ -160,6 +160,7 @@ export class Field {
 
         this.place_views(null, null);
         this.selected_view = null;
+        this.highlighted_stack = -1;
 
         this.redraw();
     }
@@ -172,19 +173,36 @@ export class Field {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // draw stacks
-        this.ctx.strokeStyle = 'blue';
-        this.ctx.beginPath();
-        let d = 4;
+        let d = 8;
         for (let stack_index = 0; stack_index <= 1; stack_index++) {
-            this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - d, 0);
-            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - d, STACK_Y_BOTTOM);
-            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] + WIDTH + d, STACK_Y_BOTTOM);
+            this.ctx.strokeStyle = this.highlighted_stack === stack_index ? 'orange' : 'blue';
+            this.ctx.lineWidth = this.highlighted_stack === stack_index ? 4 : 2;
+            this.ctx.beginPath();
+            this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - 2 * BRACKETS_OUT, 0);
+            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - 2 * BRACKETS_OUT, STACK_Y_BOTTOM + d);
+            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] + WIDTH + d, STACK_Y_BOTTOM + d);
             this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] + WIDTH + d, 0);
+            this.ctx.stroke();
         }
-        this.ctx.stroke();
 
         for (let view of this.views)
             view.draw();
+
+        let y = 0;
+        this.ctx.strokeStyle = "black";
+        this.ctx.lineWidth = 1;
+        for (let stack_index = 0; stack_index <= 1; stack_index++) {
+            for (let view of this.views) {
+                let y0 = y;
+                y -= view.lines * HEIGHT + SKIP;
+                this.ctx.beginPath();
+                this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y);
+                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y);
+                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y0);
+                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0);
+                this.ctx.stroke();
+            }
+        }
     }
 }
 

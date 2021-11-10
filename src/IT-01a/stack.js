@@ -32,19 +32,20 @@ export class StackView {
         let colors = this.stack.colors;
 
         c.save();
-        c.strokeStyle = "black";
-
+        c.strokeStyle = "#aaa";
 
         let y = this.y;
-        c.lineWidth = 0.6;
+        c.lineWidth = 1;
+
         for (let color of colors) {
             c.fillStyle = color === 0 ? "white" : "red";
-            c.fillRect(this.x, y, WIDTH, HEIGHT);
-            c.strokeRect(this.x, y, WIDTH, HEIGHT);
+            c.fillRect(this.x + 0.5, y + 0.5, WIDTH, HEIGHT);
+            c.strokeRect(this.x + 0.5, y + 0.5, WIDTH, HEIGHT);
             y += HEIGHT;
         }
 
-        c.lineWidth = 4;
+        c.strokeStyle = "black";
+        c.lineWidth = 1;
         c.strokeRect(this.x, this.y, WIDTH, HEIGHT * colors.length);
 
         c.restore();
