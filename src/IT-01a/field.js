@@ -4,8 +4,8 @@ import mouse_coordinates from "../lib/MouseCoordinates";
 const STACK_Y_BOTTOM = 260;
 const STACK_X_BOTTOMS = [30, 30 + WIDTH + 40];
 const SKIP = 0;
-const BRACKETS_WIDTH = 6;
-const BRACKETS_OUT = 2;
+const BRACKETS_WIDTH = 4;
+const BRACKETS_OUT = 6;
 
 export class Field {
 
@@ -178,8 +178,8 @@ export class Field {
             this.ctx.strokeStyle = this.highlighted_stack === stack_index ? 'orange' : 'blue';
             this.ctx.lineWidth = this.highlighted_stack === stack_index ? 4 : 2;
             this.ctx.beginPath();
-            this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - 2 * BRACKETS_OUT, 0);
-            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - 2 * BRACKETS_OUT, STACK_Y_BOTTOM + d);
+            this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - BRACKETS_OUT, 0);
+            this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - d - BRACKETS_WIDTH - BRACKETS_OUT, STACK_Y_BOTTOM + d);
             this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] + WIDTH + d, STACK_Y_BOTTOM + d);
             this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] + WIDTH + d, 0);
             this.ctx.stroke();
@@ -188,18 +188,17 @@ export class Field {
         for (let view of this.views)
             view.draw();
 
-        let y = 0;
         this.ctx.strokeStyle = "black";
         this.ctx.lineWidth = 1;
         for (let stack_index = 0; stack_index <= 1; stack_index++) {
-            for (let view of this.views) {
-                let y0 = y;
-                y -= view.lines * HEIGHT + SKIP;
+            for (let view of this.stacks[stack_index]) {
+                let y0 = view.y + view.lines * HEIGHT;
+                let y1 = view.y;
                 this.ctx.beginPath();
-                this.ctx.moveTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y);
-                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y);
-                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y0);
-                this.ctx.lineTo(STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0);
+                this.ctx.moveTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y1 + HEIGHT / 2);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y1 + HEIGHT / 2);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y0 - HEIGHT / 2);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0 - HEIGHT / 2);
                 this.ctx.stroke();
             }
         }
