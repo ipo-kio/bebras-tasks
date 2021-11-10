@@ -1,5 +1,5 @@
 import {BitmapStatefulScene} from "./BitmapStatefulScene";
-import {appendCanvas} from "../lib/ContainerHelpers";
+import {appendCanvas} from "./ContainerHelpers";
 
 export class BitmapStatesTask {
 
