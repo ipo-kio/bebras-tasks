@@ -8,14 +8,19 @@ export class Task {
     initCallback = null;
 
     constructor(container_id) {
-        let canvas = appendCanvas(container_id, 400, 500);
+        let canvas = appendCanvas(container_id, 700, 500);
         let field = new Field(canvas, [
+            new Stack([WHITE, RED, RED]),
+            new Stack([WHITE, RED, WHITE]),
             new Stack([RED, WHITE, RED]),
-            new Stack([RED, RED, WHITE, RED]),
+            new Stack([RED, WHITE, WHITE]),
             new Stack([WHITE, RED]),
-            new Stack([RED, WHITE])
+            new Stack([WHITE]),
+            new Stack([RED])
         ]);
         field.redraw();
+
+        this.field = field;
     }
 
     isEnabled() {
@@ -49,16 +54,15 @@ export class Task {
     };
 
     getAnswer() {
-        return 2;
+        return this.field.is_ok() ? 1 : -1;
     };
 
     // private methods
 
     _reset() {
-
     }
 
     _redraw() {
-
+        this.field.redraw();
     }
 }

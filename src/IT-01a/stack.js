@@ -1,5 +1,3 @@
-import mouse_coordinates from "../lib/MouseCoordinates";
-
 export const WHITE = 0;
 export const RED = 1;
 

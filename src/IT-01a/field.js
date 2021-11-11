@@ -188,6 +188,9 @@ export class Field {
         for (let view of this.views)
             view.draw();
 
+        let h = HEIGHT / 2;
+        if (HEIGHT % 2 === 0)
+            h += 0.5;
         this.ctx.strokeStyle = "black";
         this.ctx.lineWidth = 1;
         for (let stack_index = 0; stack_index <= 1; stack_index++) {
@@ -195,13 +198,26 @@ export class Field {
                 let y0 = view.y + view.lines * HEIGHT;
                 let y1 = view.y;
                 this.ctx.beginPath();
-                this.ctx.moveTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y1 + HEIGHT / 2);
-                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y1 + HEIGHT / 2);
-                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y0 - HEIGHT / 2);
-                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0 - HEIGHT / 2);
+                this.ctx.moveTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y1 + h);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y1 + h);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT - BRACKETS_WIDTH, y0 - h);
+                this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0 - h);
                 this.ctx.stroke();
             }
         }
+    }
+
+    is_ok() {
+        let level = ["", ""];
+        let cnt = 0;
+        for (let stack_index = 0; stack_index <= 1; stack_index++)
+            for (let {stack} of this.stacks[stack_index]) {
+                cnt++;
+                for (let i = stack.colors.length - 1; i >= 0; i--)
+                    level[stack_index] += stack.colors[i];
+            }
+        console.log(level, this.stacks[0], this.stacks[1]);
+        return cnt === this.views.length && level[0] === level[1];
     }
 }
 
