@@ -4,11 +4,10 @@ import {RED, Stack, WHITE} from "./stack";
 
 export class Task {
 
-    enabled = false;
     initCallback = null;
 
     constructor(container_id) {
-        let canvas = appendCanvas(container_id, 700, 500);
+        let canvas = appendCanvas(container_id, 470, 280);
         let field = new Field(canvas, [
             new Stack([WHITE, RED, RED]),
             new Stack([WHITE, RED, WHITE]),
@@ -24,12 +23,11 @@ export class Task {
     }
 
     isEnabled() {
-        return this.enabled;
+        return this.field.enabled;
     }
 
     setEnabled(state) {
-        this.enabled = state;
-        this._redraw();
+        this.field.enabled = state;
     };
 
     setInitCallback(_initCallback) {

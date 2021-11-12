@@ -14,25 +14,36 @@ export class Field {
     stacks = [[], []]; // indexes of views
     highlighted_stack = -1;
 
+    _enabled = true;
+
     constructor(canvas, stacks) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
         this.views = [];
-        let x = STACK_X_BOTTOMS[0];
+        let x = 270;
+        let ind = 0;
         for (let stack of stacks) {
-            let new_x = x;
-            x += WIDTH + 8;
-            let new_y = STACK_Y_BOTTOM + (5 - stack.colors.length) * HEIGHT;
+            let new_x = x + (ind >= 4 ? 100 : 0);
+            let new_y = 30 + (ind % 4) * 5 * HEIGHT;
             let view = new StackView(this.ctx, stack, new_x, new_y);
 
             this.views.push(view);
+            ind++;
         }
 
-        this.canvas.addEventListener("mousedown", e => this.mousedown(mouse_coordinates(this.canvas, e)));
-        this.canvas.addEventListener("mouseup", e => this.mouseup(mouse_coordinates(this.canvas, e)));
-        this.canvas.addEventListener("mousemove", e => this.mousemove(mouse_coordinates(this.canvas, e)));
-        this.canvas.addEventListener("mouseleave", e => this.mouseleave(mouse_coordinates(this.canvas, e)));
+        this.canvas.addEventListener("mousedown", e => {
+            if (e.button === 0 && this.enabled)
+                this.mousedown(mouse_coordinates(this.canvas, e));
+        });
+        this.canvas.addEventListener("mouseup", e => {
+            if (e.button === 0 && this.enabled)
+                this.mouseup(mouse_coordinates(this.canvas, e));
+        });
+        this.canvas.addEventListener("mousemove", e => {
+            if (e.buttons & 1 !== 0 && this.enabled)
+                this.mousemove(mouse_coordinates(this.canvas, e));
+        });
     }
 
     mousedown({x, y}) {
@@ -165,10 +176,6 @@ export class Field {
         this.redraw();
     }
 
-    mouseleave({x, y}) {
-        //do nothing
-    }
-
     redraw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -204,6 +211,11 @@ export class Field {
                 this.ctx.lineTo(0.5 + STACK_X_BOTTOMS[stack_index] - BRACKETS_OUT, y0 - h);
                 this.ctx.stroke();
             }
+        }
+
+        if (!this._enabled) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
 
@@ -259,6 +271,15 @@ export class Field {
         }
 
         this.place_views(null, null);
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    set enabled(value) {
+        this._enabled = value;
+        this.redraw();
     }
 }
 
