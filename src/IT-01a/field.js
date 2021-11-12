@@ -216,8 +216,49 @@ export class Field {
                 for (let i = stack.colors.length - 1; i >= 0; i--)
                     level[stack_index] += stack.colors[i];
             }
-        console.log(level, this.stacks[0], this.stacks[1]);
         return cnt === this.views.length && level[0] === level[1];
+    }
+
+    get solution() {
+        let s = "";
+        for (let view of this.views) {
+            //where is view
+            let ind = this.stacks[0].indexOf(view);
+            if (ind >= 0)
+                s += 'L' + ind;
+            else {
+                ind = this.stacks[1].indexOf(view);
+                if (ind >= 0)
+                    s += 'R' + ind;
+                else s += '-';
+            }
+        }
+        return s;
+    }
+
+    load(solution) {
+        //R3R1L0L1L2R2R0
+        let cntL = 0;
+        let cntR = 0;
+        for (let i = 0; i < this.solution.length; i++)
+            if (solution[i] === "L")
+                cntL++;
+            else if (solution[i] === "R")
+                cntR++;
+        this.stacks = [new Array(cntL), new Array(cntR)];
+
+        let i = 0;
+        for (let view of this.views) {
+            let op = solution[i];
+            if (op !== '-') {
+                i++;
+                let u = +solution[i];
+                this.stacks[0][u] = view;
+            }
+            i++;
+        }
+
+        this.place_views(null, null);
     }
 }
 

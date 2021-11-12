@@ -41,25 +41,29 @@ export class Task {
     };
 
     getSolution() {
-        return "";
+        let solution = this.field.solution;
+        if (solution === "-------") // TODO number of '-' equals number of fields
+            return "";
+        return solution;
     };
 
     loadSolution(solution) {
         this._reset();
 
-        if (solution === "")
-            return;
+        if (solution !== "")
+            this.field.load(solution);
 
         this._redraw();
     };
 
     getAnswer() {
-        return this.field.is_ok() ? 1 : -1;
+        return this.field.is_ok() ? 1 : 0;
     };
 
     // private methods
 
     _reset() {
+        this.field.load("-------"); // TODO number of '-' equals number of fields
     }
 
     _redraw() {
