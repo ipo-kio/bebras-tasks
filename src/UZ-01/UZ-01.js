@@ -210,6 +210,12 @@ export class Task {
         }
         c.stroke();
 
+        // draw path
+        for (let cell of this.cells_list)
+            cell.draw_highlight(c);
+        for (let i = 1; i < this.cells_list.length; i++)
+            this.cells_list[i - 1].draw_arrow(c, this.cells_list[i]);
+
         if (this.cursor_x >= 0 && this.cursor_y >= 0 && this.isEnabled()) {
             // draw highlighting
             for (let cell of this.all_cells) {

@@ -1,7 +1,7 @@
 export const CELL_SIZE_W = 38, CELL_SIZE_H = 38;
 const ARROW_COLOR = 'red';
-const SKIP_ALPHA = 0.2;
-const ARROW_ALPHA = 0.2;
+const SKIP_ALPHA = 0.1;
+const ARROW_ALPHA = 0.15;
 
 export class Cell {
     constructor(bg, x, y, row, col, ind) {
@@ -61,6 +61,8 @@ export class Cell {
         let y1 = this.y + CELL_SIZE_H / 2 + dy * SKIP_ALPHA;
         let x2 = that.x + CELL_SIZE_W / 2 - dx * SKIP_ALPHA;
         let y2 = that.y + CELL_SIZE_H / 2 - dy * SKIP_ALPHA;
+        let x22 = that.x + CELL_SIZE_W / 2;
+        let y22 = that.y + CELL_SIZE_H / 2;
 
         ctx.beginPath();
         ctx.moveTo(x1, y1);
@@ -69,10 +71,10 @@ export class Cell {
 
         ctx.fillStyle = ARROW_COLOR;
         ctx.beginPath();
-        ctx.moveTo(x2, y2);
+        ctx.moveTo(x22, y22);
         //perp -dy, dx
-        ctx.lineTo(x2 + ARROW_ALPHA * (-dx + dy), y2 + ARROW_ALPHA*(-dy - dx));
-        ctx.lineTo(x2 + ARROW_ALPHA * (-dx - dy), y2 + ARROW_ALPHA*(-dy + dx));
+        ctx.lineTo(x22 + ARROW_ALPHA * (-3*sx + sy), y22 + ARROW_ALPHA*(-3*sy - sx));
+        ctx.lineTo(x22 + ARROW_ALPHA * (-3*sx - sy), y22 + ARROW_ALPHA*(-3*sy + sx));
         ctx.fill();
 
         ctx.restore();
