@@ -1,3 +1,7 @@
+// correct answers:
+// .1.2.8.2.8.7.6.6.0.0.4
+// .8.8.2.2.1.0.6.0.6.7.4
+
 import mouse_coordinates from "../lib/MouseCoordinates";
 import {BUTTON_H, BUTTON_W, Cell, KEYBOARD_SKIP_X, KEYBOARD_SKIP_Y, KEYBOARD_X0, KEYBOARD_Y0} from "./cell";
 import {Table} from "./table";

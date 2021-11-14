@@ -19,8 +19,12 @@ export class Table {
         ctx.moveTo(x + this.x0 * CELL_W, y + this.y0 * CELL_H);
         let x1 = this.x0, y1 = this.y0;
         for (let cell of cells) {
-            x1 += cell.dx;
-            y1 += cell.dy;
+            let x2 = x1 + cell.dx;
+            let y2 = y1 + cell.dy;
+            if (x2 >= 0 && x2 <= this.n && y2 >= 0 && y2 <= this.m) {
+                x1 = x2;
+                y1 = y2;
+            }
 
             ctx.lineTo(x + x1 * CELL_W, y + y1 * CELL_H);
         }
@@ -37,5 +41,9 @@ export class Table {
                 ctx.stroke();
             }
         }
+
+        ctx.beginPath();
+        ctx.arc(x + this.x0 * CELL_W, y + this.y0 * CELL_H, R + 3, 0, 2 * Math.PI);
+        ctx.stroke();
     }
 }
