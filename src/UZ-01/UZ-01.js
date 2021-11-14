@@ -3,16 +3,12 @@
 // new Place(0, 0, 38, 38, 'stone', 2, {imageId: 'bg', crop: {x: 63, y: 71, width: 38, height: 38}}),
 
 import mouse_coordinates from "../lib/MouseCoordinates";
-import {Cell, Item, WINDOW_SKIP_X, WINDOW_SKIP_Y, WINDOW_X0, WINDOW_Y0} from "./item";
+import {Cell, CELL_SIZE_H, CELL_SIZE_W} from "./cell";
 
-const CANVAS_W = 485;
-const CANVAS_H = 375;
-const DRESSER_W = 485;
-const DRESSER_H = 300;
+const PAD_W = 8, PAD_H = 8;
 
 const WATER_COLOR = '#a1e8ec';
 const LINE_COLOR = '#219ea7';
-
 
 const MAPS = {
     b: ["ooo.oo.oo",
@@ -40,8 +36,6 @@ const MAPS = {
     ]
 }
 
-const START_ITEM_NAME = 'circle';
-
 export class Task {
 
     canvas;
@@ -56,7 +50,7 @@ export class Task {
     cursor_y = -1;
 
     //container - is an id of element
-    constructor(container, images, task_letter) {
+    constructor(container, images, task_letter = 'b') {
         this.enabled = true;
         this.initCallback = null;
         this.container = container;
@@ -66,63 +60,42 @@ export class Task {
         this.bg = new Image();
         this.bg.src = images.bg;
         this.bg.onload = () => this.bgLoaded();
-
-        this.items = [
-            new Item(this.bg, 'square', 140, 300, 25, 25),
-            new Item(this.bg, 'diamond', 165, 300, 25, 25),
-            new Item(this.bg, 'moon', 190, 300, 25, 25),
-            new Item(this.bg, 'star', 215, 300, 25, 25),
-            new Item(this.bg, 'tree', 240, 300, 25, 25),
-            new Item(this.bg, 'cross', 265, 300, 25, 25),
-            new Item(this.bg, 'circle', 290, 300, 25, 25),
-            new Item(this.bg, 'key', 0, 300, 140, 64),
-            new Item(this.bg, 'triangle', 315, 300, 25, 25),
-            new Item(this.bg, 'pentagon', 340, 300, 25, 25),
-            new Item(this.bg, 'heart', 365, 300, 25, 25)
-        ];
+        this.map = MAPS[task_letter];
 
         this.all_cells = [];
 
-        let y0 = WINDOW_Y0;
+        this.rows = this.map.length;
+        this.columns = this.map[0].length;
+
+        let y0 = PAD_H;
         let ind = 0;
-        for (let line of DRESSER_ITEMS) {
-            let x0 = WINDOW_X0;
-            for (let [from, to] of line) {
-                let cell = new Cell(x0, y0, from, to, ind++);
-                this.all_cells.push(cell);
-                x0 += WINDOW_SKIP_X;
+        let row = 0;
+        for (let line of this.map) {
+            let x0 = PAD_W;
+            for (let col = 0; col < line.length; col++) {
+                if (line[col] === 'o') {
+                    let cell = new Cell(this.bg, x0, y0, row, col, ind++);
+                    this.all_cells.push(cell);
+
+                    if (row === 0 && col === this.columns - 1)
+                        this.finish_cell = cell;
+                    if (row === this.rows - 1 && col === 0)
+                        this.start_cell = cell;
+                }
+                x0 += CELL_SIZE_W;
             }
-            y0 += WINDOW_SKIP_Y;
+            y0 += CELL_SIZE_H;
+            row++;
         }
 
-        this.cells_list = [];
-    }
-
-    get_item_by_name(name) {
-        for (let real_item of this.items)
-            if (real_item.name === name)
-                return real_item;
-        return null;
-    }
-
-    get items_list() {
-        let result = [this.get_item_by_name(START_ITEM_NAME)];
-        for (let cell of this.cells_list)
-            result.push(this.get_item_by_name(cell.item_name_to));
-        return result;
-    }
-
-    get last_item_name() {
-        if (this.cells_list.length === 0)
-            return START_ITEM_NAME;
-        return this.cells_list[this.cells_list.length - 1].item_name_to;
+        this.cells_list = [this.start_cell];
     }
 
     bgLoaded() {
         let containerElement = document.getElementById(this.container);
         this.canvas = document.createElement('canvas');
-        this.canvas.width = CANVAS_W;
-        this.canvas.height = CANVAS_H;
+        this.canvas.width = 2 * PAD_W + this.columns * CELL_SIZE_W;
+        this.canvas.height = 2 * PAD_H + this.columns * CELL_SIZE_H;
         containerElement.appendChild(this.canvas);
         this.undo = document.createElement('button');
         this.undo.innerText = '⮌ Назад';
@@ -161,15 +134,32 @@ export class Task {
         this.redraw();
     }
 
+    last_cell() {
+        return this.cells_list[this.cells_list.length - 1];
+    }
+
+    last_jump() {
+        let len = this.cells_list.length;
+        if (len <= 1)
+            return 0;
+        return this.cells_list[len - 2].jump_distance(this.cells_list[len - 1]);
+    }
+
+    may_jump_to(cell) {
+        let jd = cell.jump_distance(this.last_cell());
+        return jd > 0 && this.last_jump() + jd < 4;
+    }
+
     mousedown({x, y}) {
-        let last_item_name = this.last_item_name;
-        for (let cell of this.all_cells)
-            if (cell.hit_test(this.cursor_x, this.cursor_y) && cell.item_name_from === last_item_name) {
+        let last_cell = this.last_cell();
+        for (let cell of this.all_cells) {
+            if (cell.hit_test(this.cursor_x, this.cursor_y) && this.may_jump_to(cell)) {
                 this.cells_list.push(cell);
                 this.redraw();
                 this.update_back_button();
                 return;
             }
+        }
     }
 
     mouseleave(xy) {
@@ -185,11 +175,11 @@ export class Task {
     }
 
     update_back_button() {
-        this.undo.disabled = this.cells_list.length === 0 || !this.isEnabled();
+        this.undo.disabled = this.cells_list.length <= 1 || !this.isEnabled();
     }
 
     go_back() {
-        if (this.cells_list.length === 0 || !this.isEnabled())
+        if (this.cells_list.length <= 1 || !this.isEnabled())
             return;
 
         this.cells_list.splice(this.cells_list.length - 1, 1);
@@ -198,34 +188,35 @@ export class Task {
     }
 
     redraw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        let c = this.ctx;
+        c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.drawImage(this.bg, 0, 0, 485, 300, 0, 0, 485, 300);
-
-        //draw items list
-        let x0 = 16;
-        let y0 = DRESSER_H + 10;
-        let items_list = this.items_list;
-
-        for (let item of items_list) {
-            item.draw(this.ctx, x0, y0);
-            x0 += 30;
-            //TODO draw arrows from left to right
+        c.fillStyle = WATER_COLOR;
+        c.strokeStyle = LINE_COLOR;
+        c.lineWidth = 1;
+        c.fillRect(PAD_W, PAD_H, this.columns * CELL_SIZE_W, this.rows * CELL_SIZE_H);
+        c.beginPath();
+        for (let x = 0; x <= this.columns; x++) {
+            let w0 = PAD_W + x * CELL_SIZE_W + 0.5;
+            c.moveTo(w0, PAD_H + 0.5);
+            c.lineTo(w0, PAD_H + CELL_SIZE_H * this.rows + 0.5);
         }
+        for (let cell of this.all_cells)
+            cell.draw(c);
+        for (let y = 0; y <= this.rows; y++) {
+            let h0 = PAD_H + y * CELL_SIZE_H + 0.5;
+            c.moveTo(PAD_W + 0.5, h0);
+            c.lineTo(PAD_W + CELL_SIZE_W * this.columns + 0.5, h0);
+        }
+        c.stroke();
 
         if (this.cursor_x >= 0 && this.cursor_y >= 0 && this.isEnabled()) {
-            let last_item = items_list[items_list.length - 1];
-
             // draw highlighting
             for (let cell of this.all_cells) {
-                if (cell.hit_test(this.cursor_x, this.cursor_y) && cell.item_name_from === last_item.name)
+                if (cell.hit_test(this.cursor_x, this.cursor_y) && this.may_jump_to(cell))
                     cell.draw_highlight(this.ctx);
             }
-            // draw item under cursor
-            if (last_item.name !== 'key') {
-                // console.log(this.cursor_x, this.cursor_y);
-                last_item.draw(this.ctx, this.cursor_x - 25, this.cursor_y - 25);
-            }
+            // if needed, draw item under cursor
         }
 
         if (!this.isEnabled()) {
@@ -235,7 +226,7 @@ export class Task {
     }
 
     reset() {
-        this.cells_list = [];
+        this.cells_list = [this.start_cell];
 
         this.redraw();
         this.update_back_button();
@@ -262,8 +253,8 @@ export class Task {
 
     getSolution() {
         let s = "";
-        for (let cell of this.cells_list)
-            s += '.' + cell.ind;
+        for (let i = 1; i < this.cells_list.length; i++)
+            s += '.' + this.cells_list[i].ind;
         return s;
     }
 
@@ -274,16 +265,19 @@ export class Task {
         }
 
         let n = this.all_cells.length;
-        let e = START_ITEM_NAME;
-        let cells_list = [];
+        let e = this.start_cell;
+        let cells_list = [e];
+        let prev_jump = 0;
         for (let a of solution.substring(1).split('.')) {
             a = +a;
             if (a < 0 || a >= n)
                 return;
             let next_cell = this.all_cells[a];
-            if (next_cell.item_name_from !== e)
+            let jd = e.jump_distance(next_cell);
+            if (jd < 1 || jd + prev_jump >= 4)
                 return;
-            e = next_cell.item_name_to;
+            e = next_cell;
+            prev_jump = jd;
             cells_list.push(next_cell);
         }
 
@@ -296,18 +290,3 @@ export class Task {
         return 2;
     }
 }
-
-/*
-new Place(0, 0, 25, 25, 'square', 2, {imageId: 'bg', crop: {x: 140, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'diamond', 2, {imageId: 'bg', crop: {x: 165, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'moon', 2, {imageId: 'bg', crop: {x: 190, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'star', 2, {imageId: 'bg', crop: {x: 215, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 485, 300, 'dresser', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 485, height: 300}}),
-new Place(0, 0, 25, 25, 'tree', 2, {imageId: 'bg', crop: {x: 240, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'cross', 2, {imageId: 'bg', crop: {x: 265, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'circle', 2, {imageId: 'bg', crop: {x: 290, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 140, 64, 'key', 2, {imageId: 'bg', crop: {x: 0, y: 300, width: 140, height: 64}}),
-new Place(0, 0, 25, 25, 'triangle', 2, {imageId: 'bg', crop: {x: 315, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'pentagon', 2, {imageId: 'bg', crop: {x: 340, y: 300, width: 25, height: 25}}),
-new Place(0, 0, 25, 25, 'heart', 2, {imageId: 'bg', crop: {x: 365, y: 300, width: 25, height: 25}}),
- */
