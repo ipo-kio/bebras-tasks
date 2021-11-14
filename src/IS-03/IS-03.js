@@ -1,3 +1,5 @@
+// correct answer: .6.14.9.3.7
+
 import mouse_coordinates from "../lib/MouseCoordinates";
 import {Cell, Item, WINDOW_SKIP_X, WINDOW_SKIP_Y, WINDOW_X0, WINDOW_Y0} from "./item";
 
@@ -206,9 +208,10 @@ export class Task {
     }
 
     reset() {
-        //TODO reset
+        this.cells_list = [];
 
         this.redraw();
+        this.update_back_button();
     };
 
     isEnabled() {
@@ -231,15 +234,35 @@ export class Task {
     };
 
     getSolution() {
-        //TODO return solution
+        let s = "";
+        for (let cell of this.cells_list)
+            s += '.' + cell.ind;
+        return s;
     }
 
     loadSolution(solution) {
-        this.reset();
-        if (solution === '')
+        if (solution === '') {
+            this.reset();
             return;
+        }
 
-        //TODO load solution
+        let n = this.all_cells.length;
+        let e = START_ITEM_NAME;
+        let cells_list = [];
+        for (let a of solution.substring(1).split('.')) {
+            a = +a;
+            if (a < 0 || a >= n)
+                return;
+            let next_cell = this.all_cells[a];
+            if (next_cell.item_name_from !== e)
+                return;
+            e = next_cell.item_name_to;
+            cells_list.push(next_cell);
+        }
+
+        this.cells_list = cells_list;
+        this.redraw();
+        this.update_back_button();
     }
 
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
