@@ -1,3 +1,4 @@
+// <p><img src="/~res/NwAEzLl4XhX9qjq97BMm1634234389281.svg" alt="an image" /></p>
 // new Place(0, 0, 63, 71, 'dasha', 2, {imageId: 'bg', crop: {x: 0, y: 71, width: 63, height: 71}}),
 // new Place(0, 0, 64, 71, 'masha', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 64, height: 71}}),
 // new Place(0, 0, 38, 38, 'stone', 2, {imageId: 'bg', crop: {x: 63, y: 71, width: 38, height: 38}}),
@@ -5,7 +6,7 @@
 import mouse_coordinates from "../lib/MouseCoordinates";
 import {Cell, CELL_SIZE_H, CELL_SIZE_W} from "./cell";
 
-const PAD_W = 8, PAD_H = 8;
+const PAD_W = 20, PAD_H = 36;
 
 const WATER_COLOR = '#a1e8ec';
 const LINE_COLOR = '#219ea7';
@@ -95,7 +96,7 @@ export class Task {
         let containerElement = document.getElementById(this.container);
         this.canvas = document.createElement('canvas');
         this.canvas.width = 2 * PAD_W + this.columns * CELL_SIZE_W;
-        this.canvas.height = 2 * PAD_H + this.columns * CELL_SIZE_H;
+        this.canvas.height = 2 * PAD_H + this.rows * CELL_SIZE_H;
         containerElement.appendChild(this.canvas);
         this.undo = document.createElement('button');
         this.undo.innerText = '⮌ Назад';
@@ -210,6 +211,14 @@ export class Task {
         }
         c.stroke();
 
+        //draw kangaroos
+        // new Place(0, 0, 63, 71, 'dasha', 2, {imageId: 'bg', crop: {x: 0, y: 71, width: 63, height: 71}}),
+        // new Place(0, 0, 64, 71, 'masha', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 64, height: 71}}),
+        const KX = -10, KY = -40;
+        let masha_cell = this.last_cell(); //this.start_cell;
+        c.drawImage(this.bg, 0, 71, 63, 71, this.finish_cell.x + KX, this.finish_cell.y + KY, 63, 71);
+        c.drawImage(this.bg, 0, 0, 64, 71, masha_cell.x + KX, masha_cell.y + KY, 64, 71);
+
         // draw path
         for (let cell of this.cells_list)
             cell.draw_highlight(c);
@@ -293,6 +302,6 @@ export class Task {
     }
 
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
-        return 2;
+        return this.last_cell() === this.finish_cell ? 1 : 0;
     }
 }
