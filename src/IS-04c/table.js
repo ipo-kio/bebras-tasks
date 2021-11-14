@@ -1,6 +1,6 @@
 const CELL_W = 25;
 const CELL_H = 25;
-const R = 2;
+const R = 4;
 
 export class Table {
 
@@ -12,24 +12,30 @@ export class Table {
     }
 
     draw(ctx, x, y, cells) {
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        for (let j = 0; j <= this.m; j++)
-            for (let i = 0; i <= this.n; i++)
-                ctx.arc(x + i * CELL_W, y + j * CELL_H, R, 0, 2 * Math.PI);
-        ctx.fill();
 
         ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
-        let x1 = this.x0, y1 = this.y0;
+        ctx.lineWidth = 4;
         ctx.beginPath();
+        ctx.moveTo(x + this.x0 * CELL_W, y + this.y0 * CELL_H);
+        let x1 = this.x0, y1 = this.y0;
         for (let cell of cells) {
-            let x2 = x1 + cell.dx;
-            let y2 = y1 + cell.dy;
+            x1 += cell.dx;
+            y1 += cell.dy;
 
-            ctx.moveTo(x + x1 * CELL_W, y + y1 * CELL_H);
-            ctx.lineTo(x + x2 * CELL_W, y + y2 * CELL_H);
+            ctx.lineTo(x + x1 * CELL_W, y + y1 * CELL_H);
         }
         ctx.stroke();
+
+        ctx.fillStyle = "#888";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        for (let j = 0; j <= this.m; j++) {
+            for (let i = 0; i <= this.n; i++) {
+                ctx.beginPath();
+                ctx.arc(x + i * CELL_W, y + j * CELL_H, R, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
     }
 }

@@ -1,9 +1,9 @@
 import mouse_coordinates from "../lib/MouseCoordinates";
-import {BUTTON_W, Cell, KEYBOARD_SKIP_X, KEYBOARD_SKIP_Y, KEYBOARD_Y0} from "./cell";
+import {BUTTON_H, BUTTON_W, Cell, KEYBOARD_SKIP_X, KEYBOARD_SKIP_Y, KEYBOARD_X0, KEYBOARD_Y0} from "./cell";
 import {Table} from "./table";
 
-const CANVAS_W = 500;
-const CANVAS_H = 500;
+const CANVAS_W = 580;
+const CANVAS_H = 220;
 
 export class Task {
 
@@ -39,25 +39,25 @@ export class Task {
             for (let dx = -1; dx <= 1; dx++) {
                 let cell = new Cell(this.bg, x0, y0, dx, dy, ind++);
                 this.all_cells.push(cell);
-                x0 += KEYBOARD_SKIP_X;
+                x0 += BUTTON_W + KEYBOARD_SKIP_X;
             }
-            y0 += KEYBOARD_SKIP_Y;
+            y0 += BUTTON_H + KEYBOARD_SKIP_Y;
         }
 
         this.cells_list = [];
 
-        this.table = new Table(7, 7, 1, 3);
+        this.table = new Table(6, 6, 1, 3);
         this.example_path = [
-            this.cells_list[1],
-            this.cells_list[2],
-            this.cells_list[8],
-            this.cells_list[2],
-            this.cells_list[8],
-            this.cells_list[7],
-            this.cells_list[6],
-            this.cells_list[6],
-            this.cells_list[0],
-            this.cells_list[0]
+            this.all_cells[1],
+            this.all_cells[2],
+            this.all_cells[8],
+            this.all_cells[2],
+            this.all_cells[8],
+            this.all_cells[7],
+            this.all_cells[6],
+            this.all_cells[6],
+            this.all_cells[0],
+            this.all_cells[0]
         ];
     }
 
@@ -105,9 +105,8 @@ export class Task {
     }
 
     mousedown({x, y}) {
-        let last_item_name = this.last_item_name;
         for (let cell of this.all_cells)
-            if (cell.hit_test(this.cursor_x, this.cursor_y)) {
+            if (cell.hit_test(this.cursor_x, this.cursor_y) && !this.last_element_is_go()) {
                 this.cells_list.push(cell);
                 this.redraw();
                 this.update_back_button();
@@ -140,30 +139,39 @@ export class Task {
         this.update_back_button();
     }
 
+    last_element_is_go() {
+        if (this.cells_list.length === 0)
+            return false;
+        return this.cells_list[this.cells_list.length - 1] === this.all_cells[4];
+    }
+
     redraw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.drawImage(this.bg, 0, 0, 485, 300, 0, 0, 485, 300);
-
         //draw items list
-        let x0 = 16;
-        let y0 = 400;
+        let x0 = 6;
+        let y0 = 174;
 
         for (let item of this.cells_list) {
             item.draw(this.ctx, x0, y0);
             x0 += BUTTON_W + 2;
         }
 
+        for (let cell of this.all_cells) {
+            cell.draw(this.ctx);
+        }
+
         if (this.cursor_x >= 0 && this.cursor_y >= 0 && this.isEnabled()) {
             // draw highlighting
             for (let cell of this.all_cells) {
-                if (cell.hit_test(this.cursor_x, this.cursor_y))
+                if (cell.hit_test(this.cursor_x, this.cursor_y) && !this.last_element_is_go())
                     cell.draw_highlight(this.ctx);
             }
         }
 
-        this.table.draw(this.ctx, 10, 10, []);
-        this.table.draw(this.ctx, 300, 10, this.example_path);
+        let user_path = this.last_element_is_go() ? this.cells_list : [];
+        this.table.draw(this.ctx, 10, 10, user_path);
+        this.table.draw(this.ctx, 380, 10, this.example_path);
 
         if (!this.isEnabled()) {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
