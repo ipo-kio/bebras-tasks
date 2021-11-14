@@ -2,6 +2,8 @@
 // .1.2.8.2.8.7.6.6.0.0.4
 // .8.8.2.2.1.0.6.0.6.7.4
 
+// <img src="/~res/AYMerGXe6_sB0jQFk7Q-1634208889295.svg" alt="an image" /></p>.
+
 import mouse_coordinates from "../lib/MouseCoordinates";
 import {BUTTON_H, BUTTON_W, Cell, KEYBOARD_SKIP_X, KEYBOARD_SKIP_Y, KEYBOARD_X0, KEYBOARD_Y0} from "./cell";
 import {Table} from "./table";
@@ -222,23 +224,19 @@ export class Task {
             return;
         }
 
-        /*let n = this.all_cells.length;
-        let e = START_ITEM_NAME;
+        let n = this.all_cells.length;
         let cells_list = [];
         for (let a of solution.substring(1).split('.')) {
             a = +a;
             if (a < 0 || a >= n)
                 return;
             let next_cell = this.all_cells[a];
-            if (next_cell.item_name_from !== e)
-                return;
-            e = next_cell.item_name_to;
             cells_list.push(next_cell);
         }
 
         this.cells_list = cells_list;
         this.redraw();
-        this.update_back_button();*/
+        this.update_back_button();
     }
 
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
