@@ -265,7 +265,7 @@ export class Field {
             if (op !== '-') {
                 i++;
                 let u = +solution[i];
-                this.stacks[0][u] = view;
+                this.stacks[op === 'L' ? 0 : 1][u] = view;
             }
             i++;
         }

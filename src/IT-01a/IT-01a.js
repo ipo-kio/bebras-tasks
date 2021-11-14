@@ -1,3 +1,5 @@
+// <img src="/~res/N_EJNq_LgAi4QeHS5GTI1634211742989.png" style="height:120px" alt="an image" />
+
 import {appendCanvas} from "../lib/ContainerHelpers";
 import {Field} from "./field";
 import {RED, Stack, WHITE} from "./stack";
@@ -9,11 +11,11 @@ export class Task {
     constructor(container_id) {
         let canvas = appendCanvas(container_id, 470, 280);
         let field = new Field(canvas, [
-            new Stack([WHITE, RED, RED]),
+            new Stack([RED, RED, WHITE]),
             new Stack([WHITE, RED, WHITE]),
             new Stack([RED, WHITE, RED]),
-            new Stack([RED, WHITE, WHITE]),
-            new Stack([WHITE, RED]),
+            new Stack([WHITE, WHITE, RED]),
+            new Stack([RED, WHITE]),
             new Stack([WHITE]),
             new Stack([RED])
         ]);

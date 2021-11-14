@@ -3,10 +3,10 @@ package ru.ipo.imageunion;
 import java.io.File;
 import java.io.IOException;
 
-public class IS_03 {
+public class UZ_01 {
 
     private static final String TASKS_DIRECTORY = "src";
-    private static final String TASK_NAME = "IS-03";
+    private static final String TASK_NAME = "UZ-01";
 
     public static void main(String[] args) throws IOException {
         Pics pics = new Pics(TASK_NAME, new File(TASKS_DIRECTORY), 1);

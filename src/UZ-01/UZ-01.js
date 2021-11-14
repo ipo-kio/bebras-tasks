@@ -1,5 +1,6 @@
-// correct answer: .6.14.9.3.7
-//<p><img src="/~res/_kFXN2CDm1QmTwtCSiPO1634194114818.svg" alt="an image" /></p>
+// new Place(0, 0, 63, 71, 'dasha', 2, {imageId: 'bg', crop: {x: 0, y: 71, width: 63, height: 71}}),
+// new Place(0, 0, 64, 71, 'masha', 2, {imageId: 'bg', crop: {x: 0, y: 0, width: 64, height: 71}}),
+// new Place(0, 0, 38, 38, 'stone', 2, {imageId: 'bg', crop: {x: 63, y: 71, width: 38, height: 38}}),
 
 import mouse_coordinates from "../lib/MouseCoordinates";
 import {Cell, Item, WINDOW_SKIP_X, WINDOW_SKIP_Y, WINDOW_X0, WINDOW_Y0} from "./item";
@@ -9,11 +10,35 @@ const CANVAS_H = 375;
 const DRESSER_W = 485;
 const DRESSER_H = 300;
 
-const DRESSER_ITEMS = [
-    [['diamond', 'heart'], ['star', 'tree'], ['heart', 'cross'], ['star', 'moon'], ['circle', 'heart']],
-    [['pentagon', 'cross'], ['circle', 'pentagon'], ['moon', 'key'], ['diamond', 'tree'], ['triangle', 'star']],
-    [['cross', 'tree'], ['heart', 'diamond'], ['square', 'star'], ['triangle', 'heart'], ['pentagon', 'triangle']]
-];
+const WATER_COLOR = '#a1e8ec';
+const LINE_COLOR = '#219ea7';
+
+
+const MAPS = {
+    b: ["ooo.oo.oo",
+        "o.o...o.o",
+        ".o.o.....",
+        "....o.o.o",
+        ".oo.o.o.o",
+        ".....o.o.",
+        "oo.o.o.oo"
+    ],
+    d: ["ooo.oo.o.o....o.oo",
+        "o.o......oo.o..o.o",
+        ".o.o...oo.o.o.oo..",
+        ".....oo.o....o..o.",
+        ".oo.o.o....o.o.o.o",
+        "o.....oo.o....o.o.",
+        "o..o......o.o...o.",
+        "..o.oo.ooooo.oo.oo",
+        "o.o...o.o..o...o.o",
+        ".o.o......o.o.....",
+        "....o.o.o....o.o.o",
+        ".oo.o.o.o.oo.o...o",
+        "o....o.o.o....o.o.",
+        "oo.o.o.oooo.o.o.oo"
+    ]
+}
 
 const START_ITEM_NAME = 'circle';
 
@@ -31,7 +56,7 @@ export class Task {
     cursor_y = -1;
 
     //container - is an id of element
-    constructor(container, images) {
+    constructor(container, images, task_letter) {
         this.enabled = true;
         this.initCallback = null;
         this.container = container;
@@ -41,7 +66,7 @@ export class Task {
         this.bg = new Image();
         this.bg.src = images.bg;
         this.bg.onload = () => this.bgLoaded();
-        
+
         this.items = [
             new Item(this.bg, 'square', 140, 300, 25, 25),
             new Item(this.bg, 'diamond', 165, 300, 25, 25),
@@ -56,7 +81,6 @@ export class Task {
             new Item(this.bg, 'heart', 365, 300, 25, 25)
         ];
 
-        this.cells = [];
         this.all_cells = [];
 
         let y0 = WINDOW_Y0;
@@ -81,18 +105,18 @@ export class Task {
         return null;
     }
 
-     get items_list() {
+    get items_list() {
         let result = [this.get_item_by_name(START_ITEM_NAME)];
         for (let cell of this.cells_list)
             result.push(this.get_item_by_name(cell.item_name_to));
         return result;
-     }
+    }
 
-     get last_item_name() {
+    get last_item_name() {
         if (this.cells_list.length === 0)
             return START_ITEM_NAME;
         return this.cells_list[this.cells_list.length - 1].item_name_to;
-     }
+    }
 
     bgLoaded() {
         let containerElement = document.getElementById(this.container);
