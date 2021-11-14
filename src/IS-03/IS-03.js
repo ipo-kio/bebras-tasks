@@ -2,7 +2,7 @@ import mouse_coordinates from "../lib/MouseCoordinates";
 import {Cell, Item, WINDOW_SKIP_X, WINDOW_SKIP_Y, WINDOW_X0, WINDOW_Y0} from "./item";
 
 const CANVAS_W = 485;
-const CANVAS_H = 400;
+const CANVAS_H = 375;
 const DRESSER_W = 485;
 const DRESSER_H = 300;
 
@@ -12,15 +12,17 @@ const DRESSER_ITEMS = [
     [['cross', 'tree'], ['heart', 'diamond'], ['square', 'star'], ['triangle', 'heart'], ['pentagon', 'triangle']]
 ];
 
+const START_ITEM_NAME = 'circle';
+
 export class Task {
 
     canvas;
-    info;
+    undo;
     ctx;
     bg;
     loaded;
 
-    items_list;
+    cells_list;
 
     cursor_x = -1;
     cursor_y = -1;
@@ -55,21 +57,18 @@ export class Task {
         this.all_cells = [];
 
         let y0 = WINDOW_Y0;
+        let ind = 0;
         for (let line of DRESSER_ITEMS) {
-            let items_line = [];
-            this.cells.push(items_line);
-
             let x0 = WINDOW_X0;
             for (let [from, to] of line) {
-                let cell = new Cell(x0, y0, from, to);
-                items_line.push(cell);
+                let cell = new Cell(x0, y0, from, to, ind++);
                 this.all_cells.push(cell);
                 x0 += WINDOW_SKIP_X;
             }
             y0 += WINDOW_SKIP_Y;
         }
 
-        this.items_list = [this.get_item_by_name('circle')];
+        this.cells_list = [];
     }
 
     get_item_by_name(name) {
@@ -79,22 +78,37 @@ export class Task {
         return null;
     }
 
+     get items_list() {
+        let result = [this.get_item_by_name(START_ITEM_NAME)];
+        for (let cell of this.cells_list)
+            result.push(this.get_item_by_name(cell.item_name_to));
+        return result;
+     }
+
+     get last_item_name() {
+        if (this.cells_list.length === 0)
+            return START_ITEM_NAME;
+        return this.cells_list[this.cells_list.length - 1].item_name_to;
+     }
+
     bgLoaded() {
         let containerElement = document.getElementById(this.container);
         this.canvas = document.createElement('canvas');
         this.canvas.width = CANVAS_W;
         this.canvas.height = CANVAS_H;
         containerElement.appendChild(this.canvas);
-        this.info = document.createElement('span');
-        containerElement.appendChild(this.info);
-        this.canvas.style = 'display: inline-block; vertical-align: middle';
-        this.info.style = 'font-size: 1.4em; margin-left: 2em; ' +
+        this.undo = document.createElement('button');
+        this.undo.innerText = '⮌ Назад';
+        containerElement.appendChild(this.undo);
+        this.canvas.style = 'display: block; vertical-align: middle';
+        this.undo.style = 'padding: 0.6em; margin-left: 16px' +
             '  -webkit-touch-callout: none;' +
             '    -webkit-user-select: none;' +
             '     -khtml-user-select: none;' +
             '       -moz-user-select: none;' +
             '        -ms-user-select: none;' +
             '            user-select: none;';
+        this.undo.addEventListener('click', e => this.go_back());
 
         this.ctx = this.canvas.getContext('2d');
         this.canvas.addEventListener('mousedown', (e) => {
@@ -115,11 +129,20 @@ export class Task {
 
         this.loaded = true;
 
+        this.update_back_button();
+
         this.redraw();
     }
 
-    mousedown(xy) {
-        //TODO mousedown
+    mousedown({x, y}) {
+        let last_item_name = this.last_item_name;
+        for (let cell of this.all_cells)
+            if (cell.hit_test(this.cursor_x, this.cursor_y) && cell.item_name_from === last_item_name) {
+                this.cells_list.push(cell);
+                this.redraw();
+                this.update_back_button();
+                return;
+            }
     }
 
     mouseleave(xy) {
@@ -134,6 +157,18 @@ export class Task {
         this.redraw();
     }
 
+    update_back_button() {
+        this.undo.disabled = this.cells_list.length === 0 || !this.isEnabled();
+    }
+
+    go_back() {
+        if (this.cells_list.length === 0 || !this.isEnabled())
+            return;
+
+        this.cells_list.splice(this.cells_list.length - 1, 1);
+        this.redraw();
+        this.update_back_button();
+    }
 
     redraw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -141,22 +176,32 @@ export class Task {
         this.ctx.drawImage(this.bg, 0, 0, 485, 300, 0, 0, 485, 300);
 
         //draw items list
-        let x0 = 30;
-        let y0 = DRESSER_H + 25;
-        for (let item of this.items_list) {
+        let x0 = 16;
+        let y0 = DRESSER_H + 10;
+        let items_list = this.items_list;
+
+        for (let item of items_list) {
             item.draw(this.ctx, x0, y0);
             x0 += 30;
             //TODO draw arrows from left to right
         }
-        if (this.cursor_x >= 0 && this.cursor_y >= 0) {
+
+        if (this.cursor_x >= 0 && this.cursor_y >= 0 && this.isEnabled()) {
             // draw item under cursor
-            let last_item = this.items_list[this.items_list.length - 1];
-            last_item.draw(this.ctx, this.cursor_x, this.cursor_y);
+            let last_item = items_list[items_list.length - 1];
+            if (last_item.name !== 'key') {
+                last_item.draw(this.ctx, this.cursor_x - 25, this.cursor_y - 25);
+            }
             // draw highlighting
             for (let cell of this.all_cells) {
                 if (cell.hit_test(this.cursor_x, this.cursor_y) && cell.item_name_from === last_item.name)
                     cell.draw_highlight(this.ctx);
             }
+        }
+
+        if (!this.isEnabled()) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
 
@@ -174,6 +219,7 @@ export class Task {
         this.enabled = state;
 
         this.redraw();
+        this.update_back_button();
     };
 
     setInitCallback(_initCallback) {

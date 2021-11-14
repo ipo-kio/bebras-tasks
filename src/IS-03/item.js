@@ -14,26 +14,26 @@ export class Item {
         this.w = w;
         this.h = h;
         this.name = name;
-        this.w2 = Math.trunc(w / 2);
-        this.h2 = Math.trunc(h / 2);
+        // this.w2 = Math.trunc(w / 2);
+        // this.h2 = Math.trunc(h / 2);
     }
 
     draw(ctx, cx, cy) {
-        ctx.drawImage(this.bg, this.x, this.y, this.w, this.h, cx - this.w2, cy - this.h2, this.w, this.h);
+        ctx.drawImage(this.bg, this.x, this.y, this.w, this.h, cx, cy, this.w, this.h);
     }
 
 }
 
 export class Cell {
-    constructor(x, y, item_name_from, item_name_to) {
+    constructor(x, y, item_name_from, item_name_to, ind) {
         this.x = x;
         this.y = y;
         this.item_name_from = item_name_from;
         this.item_name_to = item_name_to;
+        this.ind = ind;
     }
 
     hit_test(x0, y0) {
-        // console.log(x0, y0, this.x, this.y, WINDOW_W, WINDOW_H, this.x <= x0 && x0 <= this.x + WINDOW_W && this.y <= y0 && y0 <= this.y + WINDOW_H);
         return this.x <= x0 && x0 <= this.x + WINDOW_W && this.y <= y0 && y0 <= this.y + WINDOW_H;
     }
 
