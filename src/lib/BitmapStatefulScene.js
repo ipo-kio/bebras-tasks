@@ -2,11 +2,12 @@ import {StatefulElementsScene} from "./StatefulElementsScene";
 import {StatefulElement} from "./StatefulElement";
 
 export class BitmapStatefulScene extends StatefulElementsScene {
-    constructor(canvas, bg, sourceX, sourceY, elements) {
+    constructor(canvas, bg, sourceX, sourceY, elements, draw_bg = () => {}) {
         super(canvas, elements);
         this.bg = bg;
         this.sourceX = sourceX;
         this.sourceY = sourceY;
+        this.draw_bg = draw_bg;
         this.drawBg();
     }
 
@@ -21,6 +22,8 @@ export class BitmapStatefulScene extends StatefulElementsScene {
             this.sourceX, this.sourceY, this.width, this.height,
             0, 0, this.width, this.height
         );
+
+        this.draw_bg();
     }
 }
 

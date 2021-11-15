@@ -25,7 +25,8 @@ export class BitmapStatesTask {
             this.canvas,
             this.img,
             this.bg_position.x, this.bg_position.y,
-            this.create_elements(this.img, this.ctx)
+            this.create_elements(this.img, this.ctx),
+            () => this.draw_bg()
         );
 
         if (this.initCallback)
@@ -76,5 +77,9 @@ export class BitmapStatesTask {
         //TODO create elements
 
         return elements;
+    }
+
+    draw_bg() {
+        //to be overriden
     }
 }
