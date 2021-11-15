@@ -1,5 +1,4 @@
-export const WINDOW_W = 62;
-export const WINDOW_H = 62;
+export const D = -50;
 
 export class Room {
     constructor(points, number, color, ind) {
@@ -13,10 +12,11 @@ export class Room {
         ctx.beginPath();
         let first = true;
         for (let [x, y] of this.points)
-            if (first)
-                ctx.moveTo(x, y);
-            else
-                ctx.lineTo(x, y);
+            if (first) {
+                ctx.moveTo(x, y + D);
+                first = false;
+            } else
+                ctx.lineTo(x, y + D);
     }
 
     hit_test(ctx, x0, y0) {
@@ -34,14 +34,24 @@ export class Room {
         ctx.restore();
     }
 
+    draw_used(ctx) {
+        ctx.save();
+
+        ctx.fillStyle = 'rgba(200, 0, 0, 0.8)';
+        this.outline_path(ctx);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
     draw_at(ctx, x0, y0) {
         ctx.textBaseline = "top";
-        ctx.font = 'bold 20px sans-serif';
+        ctx.font = 'bold 16px sans-serif';
         let text = '' + this.number;
         let m = ctx.measureText(text);
 
         ctx.fillStyle = this.color;
-        ctx.drawRect(x0, y0, x0 + 6 + m.width, 26);
+        ctx.fillRect(x0, y0, 6 + m.width, 22);
 
         ctx.fillStyle = 'black';
         ctx.fillText(text, x0 + 3, y0 + 3);

@@ -1,8 +1,10 @@
-import mouse_coordinates from "../lib/MouseCoordinates";
-import {Room} from "./room";
+// correct answer: .7.15.11.12.14.13.10.9.8.0.1.2.3.4.5.6
 
-const CANVAS_W = 360;
-const CANVAS_H = 360;
+import mouse_coordinates from "../lib/MouseCoordinates";
+import {D, Room} from "./room";
+
+const CANVAS_W = 520;
+const CANVAS_H = 320;
 
 export class Task {
 
@@ -50,7 +52,7 @@ export class Task {
             new Room(r(209, 70, 338, 140), 142, '#b7e8f6', 10),
             new Room([[84, 140], [150, 140], [153, 190], [128, 190], [126, 164], [82, 164]], 139, '#f5e3d5', 11),
             new Room(r(154, 140, 206, 190), 141, '#7fdaf1', 12),
-            new Room(r(208, 140, 258, 189), 143, '#f5e3d5', 13),
+            new Room(r(208, 140, 261, 189), 143, '#f5e3d5', 13),
             new Room(r(263, 142, 339, 257), 144, '#eddde8', 14),
             new Room(r(83, 165, 128, 258), 135, '#cceef9', 15)
         ];
@@ -103,7 +105,7 @@ export class Task {
 
     mousedown({x, y}) {
         for (let cell of this.all_cells)
-            if (cell.hit_test(this.cursor_x, this.cursor_y) && this.cells_list.indexOf(cell) < 0) {
+            if (cell.hit_test(this.ctx, this.cursor_x, this.cursor_y) && this.cells_list.indexOf(cell) < 0) {
                 this.cells_list.push(cell);
                 this.redraw();
                 this.update_back_button();
@@ -139,23 +141,23 @@ export class Task {
     redraw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.drawImage(this.bg, 0, 0, 360, 360, 0, 0, 360, 360);
+        this.ctx.drawImage(this.bg, 0, 0, 360, 360, 0, D, 360, 360);
 
         //draw items list
         let x0 = 16;
-        let y0 = 320;
+        let y0 = 280;
 
         for (let cell of this.cells_list) {
             cell.draw_at(this.ctx, x0, y0);
-            x0 += 40;
+            cell.draw_used(this.ctx);
+            x0 += 30;
         }
 
         if (this.cursor_x >= 0 && this.cursor_y >= 0 && this.isEnabled()) {
             // draw highlighting
-            for (let cell of this.all_cells) {
-                if (cell.hit_test(this.cursor_x, this.cursor_y) && this.cells_list.indexOf(cell) < 0)
+            for (let cell of this.all_cells)
+                if (cell.hit_test(this.ctx, this.cursor_x, this.cursor_y) && this.cells_list.indexOf(cell) < 0)
                     cell.draw_highlight(this.ctx);
-            }
         }
 
         if (!this.isEnabled()) {
