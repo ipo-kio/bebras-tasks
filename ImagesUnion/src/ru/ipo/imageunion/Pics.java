@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 
 public class Pics {
 
+    public static double GLOBAL_SCALE = 1;
+
     private final Map<String, BufferedImage> images = new HashMap<>();
     private final Map<String, Pic> pics = new HashMap<>();
 
@@ -55,13 +57,20 @@ public class Pics {
                     throw new IllegalArgumentException("in svg images you must have the following name: id_width_height");
 
                 id = splitId[0];
-                BufferedImage bi = SVG.loadSVG(
-                        picsFile.toURI().toString(),
-                        Integer.parseInt(splitId[1]),
-                        Integer.parseInt(splitId[2])
-                );
+                int w = (int) Math.round(Integer.parseInt(splitId[1]) * GLOBAL_SCALE);
+                int h = (int) Math.round(Integer.parseInt(splitId[2]) * GLOBAL_SCALE);
+                for (int i = 3; i < splitId.length; i++) {
+                    final String action = splitId[i];
+                    if (action.startsWith("scale")) {
+                        int s = Integer.parseInt(action.substring(1, action.length() - 1));
+                        w = (int)Math.round(w * s / 100.0);
+                        h = (int)Math.round(h * s / 100.0);
+                    }
+                }
+                BufferedImage bi = SVG.loadSVG(picsFile.toURI().toString(), w, h);
                 for (int i = 3; i < splitId.length; i++)
-                    bi = process(bi, splitId[i]);
+                    if (splitId[i].startsWith("mcr"))
+                        bi = process(bi, splitId[i]);
                 images.put(id, bi);
             } else
                 images.put(id, ImageIO.read(picsFile));
