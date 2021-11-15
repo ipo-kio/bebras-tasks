@@ -1,3 +1,16 @@
+const WEIGHT = {
+    eggs: 1,
+    chicken: 3,
+    spinach: 1,
+    fruit: 4,
+    fish: 3,
+    beef: 2,
+    rice: 5,
+    sugar: 2
+};
+
+const NEED_WEIGHTS = [8, 5, 5, 3];
+
 export class Task {
 
     //container - is an id of element
@@ -91,6 +104,20 @@ export class Task {
     }
 
     getAnswer() { //-1 no answer, 0 wrong, 1 correct, 2 - server check
-        return 2;
+        let answer = this.ddlib.getOutput();
+
+        for (let i = 0; i < 4; i++) {
+            let sum = 0;
+            for (let j = 0; j < 2; j++) {
+                let name = 'v' + i + j;
+                if (answer[name] === -1)
+                    return 0;
+                sum += WEIGHT[answer[name]];
+            }
+            if (sum !== NEED_WEIGHTS[i])
+                return 0;
+        }
+
+        return 1;
     }
 }
