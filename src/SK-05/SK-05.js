@@ -1,3 +1,5 @@
+// <p><img src="/~res/Qp-NSyOvcZ5rKyqNLpYj1634225209532.svg" alt="an image" /><img src="/~res/ygFHgonKRIRzmmI_X1fh1634225227709.svg" alt="an image" /><img src="/~res/Ba20qnr5meXSQdUm221h1634225217425.svg" alt="an image" /></p>
+
 import {BitmapStatesTask} from "../lib/BitmapStatesTask";
 import {BitmapElement, BitmapState} from "../lib/BitmapStatefulScene";
 
