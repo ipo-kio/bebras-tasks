@@ -1,3 +1,5 @@
+//
+
 export class Task {
 
     //container - is an id of element
@@ -15,9 +17,9 @@ export class Task {
             user-select: none;
             font: 18px monospace'>
 Розочка<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Повторить <input type="number" style="text-align: center; width:3em; font: 18px black monospace" placeholder="X"> раз<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ромб<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Повернуть вправо на <input type="number" style="text-align: center; width:3em; font: 18px black monospace" placeholder="Y"> градусов<br>
+&nbsp;&nbsp;Повторить <input type="number" style="text-align: center; width:3em; font: 18px black monospace" placeholder="X"> раз<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Ромб<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Повернуть вправо на <input type="number" style="text-align: center; width:3em; font: 18px black monospace" placeholder="Y"> градусов<br>
         </div><canvas width="200px" height="200px" style="display:inline-block; vertical-align: middle"></canvas>`;
 
         let inputs = this.containerElement.querySelectorAll('input');
@@ -28,7 +30,7 @@ export class Task {
         let canvas = this.containerElement.querySelector('canvas');
         let ctx = canvas.getContext('2d');
         ctx.strokeStyle = '#000088';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.translate(canvas.width / 2, canvas.height / 2);
 
         ctx.beginPath();
