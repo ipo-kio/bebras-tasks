@@ -7,10 +7,10 @@ export class Task {
         let dy = 300;
 
         let x0 = 60;
-        let y0 = 120;
+        let y0 = 140;
 
-        let WIDTH = 8 * dx;
-        let HEIGHT = 500;
+        let WIDTH = 560;
+        let HEIGHT = 320;
 
         let places = [
             new Place(x0 + 0 * y0 - 72 / 2, 0, 72, 94, 'beaver1', 1, {
@@ -51,11 +51,15 @@ export class Task {
             }),
         ];
 
-
+        let ww = 56;
+        let hh = 74;
+        let o = 30;
         for (let i = 0; i < 4; i++) {
+            let x = x0 + i * y0;
             for (let j = 0; j < 2; j++) {
-                var vObject = {stroke: "green", strokeWidth: 2, dashArray: [4, 4]};
-
+                let vObject = {stroke: "green", strokeWidth: 2, dashArray: [4, 4]};
+                let x1 = x - ww / 2 + o * (2 * j - 1);
+                places.push(new Place(x1, 100, ww, hh, 'v' + i + j, 0, vObject));
             }
         }
 
