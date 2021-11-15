@@ -30,11 +30,9 @@ export class Task extends BitmapStatesTask {
 
         let el = [];
 
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                el.push(new BitmapElement(ctx, NUM + PAD + (i + 1) * CELL, NUM + PAD + (j + 1) * CELL, all, [1, 2, 3, 0]));
-            }
-        }
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                el.push(new BitmapElement(ctx, NUM + PAD + (j + 1) * CELL, NUM + PAD + (i + 1) * CELL, all, [1, 2, 3, 0]));
 
         el.push(
             new BitmapElement(ctx, NUM + PAD + 1 * CELL, NUM + PAD + 0 * CELL, [owl], [0]),
@@ -76,6 +74,34 @@ export class Task extends BitmapStatesTask {
             this.ctx.fillText('' + ROW_NUMBERS[i], NUM / 2, NUM + CELL / 2 + CELL * (i + 1));
 
         this.ctx.restore();
+    }
+
+    getAnswer() {
+        let e = this.scene.elements;
+
+        for (let row = 0; row < 3; row++) {
+            let sum = 0;
+            for (let col = 0; col < 3; col++) {
+                let state = e[3 * row + col].state;
+                if (state === 0)
+                    return 0;
+                if (state === ROW_ANIMALS[row])
+                    sum++;
+            }
+            if (sum !== ROW_NUMBERS[row])
+                return 0;
+        }
+
+        for (let col = 0; col < 3; col++) {
+            let sum = 0;
+            for (let row = 0; row < 3; row++)
+                if (e[3 * row + col].state === COL_ANIMALS[col])
+                    sum++;
+            if (sum !== COL_NUMBERS[col])
+                return 0;
+        }
+
+        return 1;
     }
 }
 
