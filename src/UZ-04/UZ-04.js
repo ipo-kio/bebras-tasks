@@ -154,10 +154,8 @@ export class Task extends BitmapStatesTask {
             if (element.state === 1)
                 dogs.push(element);
 
-        if (dogs.length !== CORRECT_NUM_OF_DOGS) {
-            console.log('1', dogs, dogs.length, CORRECT_NUM_OF_DOGS);
+        if (dogs.length !== CORRECT_NUM_OF_DOGS)
             return 0;
-        }
 
         for (let i = 0; i < M; i++)
             for (let j = 0; j < N; j++)
@@ -168,10 +166,8 @@ export class Task extends BitmapStatesTask {
                             has_guard = true;
                             break;
                         }
-                    if (!has_guard) {
-                        console.log('2', i, j, dogs);
+                    if (!has_guard)
                         return 0;
-                    }
                 }
         return 1;
     }
