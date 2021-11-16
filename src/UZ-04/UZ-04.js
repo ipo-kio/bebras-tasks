@@ -22,6 +22,7 @@ const MAP = [
     "x..............",
     ".xxx.xxx...x..."
 ];
+const CORRECT_NUM_OF_DOGS = 9;
 
 let M = MAP.length;
 let N = MAP[0].length;
@@ -141,6 +142,36 @@ export class Task extends BitmapStatesTask {
                 }
 
         return elements;
+    }
+
+    getAnswer() {
+        let e = this.scene.elements;
+
+        let dogs = [];
+        for (let element of e)
+            if (element.state === 1)
+                dogs.push(element);
+
+        if (dogs.length !== CORRECT_NUM_OF_DOGS) {
+            console.log('1', dogs, dogs.length, CORRECT_NUM_OF_DOGS);
+            return 0;
+        }
+
+        for (let i = 0; i < M; i++)
+            for (let j = 0; j < N; j++)
+                if (MAP[i][j] === 'x') {
+                    let has_guard = false;
+                    for (let dog of dogs)
+                        if (Math.abs(i - dog.i) + Math.abs(j - dog.j) <= 2) {
+                            has_guard = true;
+                            break;
+                        }
+                    if (!has_guard) {
+                        console.log('2', i, j, dogs);
+                        return 0;
+                    }
+                }
+        return 1;
     }
 }
 
