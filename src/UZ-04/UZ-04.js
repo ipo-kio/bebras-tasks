@@ -1,4 +1,5 @@
 import {BitmapStatesTask} from "../lib/BitmapStatesTask";
+import {BitmapElement, BitmapState} from "../lib/BitmapStatefulScene";
 
 const D = 28;
 const PAD = 4;
@@ -111,6 +112,35 @@ export class Task extends BitmapStatesTask {
         for (let x = 0; x < N; x++)
             if (MAP[M - 1][x] !== 'x')
                 fence(x, M, x + 1, M);
+
+        //draw dogs outline
+        if (this.scene) {
+            c.fillStyle = 'rgba(255, 0, 0, 0.6)';
+            for (let i = 0; i < M; i++)
+                for (let j = 0; j < N; j++)
+                    for (let e of this.scene.elements)
+                        if (e.state === 1 && Math.abs(e.i - i) + Math.abs(e.j - j) <= 2)
+                            c.fillRect(b(j), b(i), D, D);
+        }
+    }
+
+    create_elements(img, ctx) {
+        let bitmap_states = [
+            new BitmapState(img, D, D, D, D),
+            new BitmapState(img, 0, 0, D, D)
+        ];
+
+        let elements = [];
+        for (let i = 0; i < M; i++)
+            for (let j = 0; j < N; j++)
+                if (i === 0 || j === 0 || i === M - 1 || j === N - 1) {
+                    let el = new BitmapElement(ctx, PAD + j * D, PAD + i * D, bitmap_states, [1, 0]);
+                    el.j = j;
+                    el.i = i;
+                    elements.push(el);
+                }
+
+        return elements;
     }
 }
 
