@@ -1,5 +1,18 @@
+// <p><img src="/~res/cFmcIoiDuBv3nxsH-5JW1633606407691.svg" alt="an image" /></p>
+
 import {BitmapStatesTask} from "../lib/BitmapStatesTask";
 import {RectangleStatefulElement} from "../lib/SimpleStatesTask";
+
+const EDGES = [
+    [0,1],
+    [1,2],
+    [2,3],
+    [4,5],
+    [5,6],
+    [1,4],
+    [2,5],
+    [3,6]
+];
 
 export class Task extends BitmapStatesTask {
     constructor(container, pictures) {
@@ -18,6 +31,15 @@ export class Task extends BitmapStatesTask {
             new Rect(ctx, 284 + dx, 263 + dy),
             new Rect(ctx, 377 + dx, 195 + dy)
         ];
+    }
+
+
+    getAnswer() {
+        let e = this.scene.elements;
+        for (let [u, v] of EDGES)
+            if (e[u].state + e[v].state === 0)
+                return 0;
+        return 1;
     }
 }
 
