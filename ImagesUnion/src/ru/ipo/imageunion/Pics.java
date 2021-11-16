@@ -62,7 +62,7 @@ public class Pics {
                 for (int i = 3; i < splitId.length; i++) {
                     final String action = splitId[i];
                     if (action.startsWith("scale")) {
-                        int s = Integer.parseInt(action.substring(1, action.length() - 1));
+                        int s = Integer.parseInt(action.substring("scale".length(), action.length() - 1));
                         w = (int)Math.round(w * s / 100.0);
                         h = (int)Math.round(h * s / 100.0);
                     }

@@ -53,13 +53,18 @@ export class Task extends BitmapStatesTask {
         this.ctx.save();
 
         this.ctx.strokeStyle = 'black';
-        this.ctx.lineWidth = 1;
+        this.ctx.lineWidth = 2;
         this.ctx.beginPath();
-        this.ctx.moveTo(PAD, NUM + CELL + 0.5);
-        this.ctx.lineTo(NUM + PAD + 4 * CELL, NUM + CELL + 0.5);
-        this.ctx.moveTo(NUM + CELL + 0.5, PAD);
-        this.ctx.lineTo(NUM + CELL + 0.5, NUM + PAD + 4 * CELL);
+        for (let i = 0; i <= 3; i++) {
+            this.ctx.moveTo(NUM + CELL, NUM + CELL * (i + 1));
+            this.ctx.lineTo(NUM + 4 * CELL, NUM + CELL * (i + 1));
+        }
+        for (let i = 0; i <= 3; i++) {
+            this.ctx.moveTo(NUM + CELL * (i + 1), NUM + CELL);
+            this.ctx.lineTo(NUM + CELL * (i + 1), NUM + 4 * CELL);
+        }
         this.ctx.stroke();
+
 
         this.ctx.fillStyle = 'black';
         this.ctx.font = '20px sans-serif';
