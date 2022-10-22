@@ -1,4 +1,4 @@
-This repository in the branch `bebras-22` currently contains tasks of the previous 2021 year. They are currently examples tasks implementation.
+This repository in the branch `bebras-22` currently contains tasks of the previous 2021 year. They are examples of tasks implementation.
 
 - run `npm install`
 - run `npm run compile` and find output html files in the `dist` folder. You can view them in the browser.
