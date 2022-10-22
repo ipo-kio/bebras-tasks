@@ -59,42 +59,31 @@ module.exports = function (env) {
             rules: [
                 {
                     test: /\.js$/,
-                    loader: 'babel-loader', //Why loader instead of use?
-                    include: sourceFolders,
-                    options: {
-                        presets: [
-                            ['es2015', {"modules": false}], //this is es2015 preset with options
-                        ],
-                        plugins: [
-                            "transform-object-rest-spread",
-                            "transform-class-properties"
-                            // ["transform-object-rest-spread", { "useBuiltIns": true }]
-                        ]
-                    }
+                    exclude: /node_modules/,
+                    use: ['babel-loader'], //Why loader instead of use?
+                    // include: sourceFolders,
                 }
             ]
         },
         plugins: [
-            new CopyWebpackPlugin([
-                {from: './app/*', to: '.', flatten: true}
-            ])
+            new CopyWebpackPlugin({
+                patterns: [
+                    'app'
+                ]
+            })
         ]
     };
 
     let debugConfig = {
+        mode: 'development',
         devtool: 'source-map',
-        //debug: true, //TODO https://webpack.js.org/guides/migrating/#debug
         output: {
             pathinfo: true
         }
     };
 
     let productionConfig = {
-        plugins: [
-            new webpack.optimize.UglifyJsPlugin({
-                comments: false
-            })
-        ]
+        mode: 'production'
     };
 
     let arrayMerge = function (destArray, sourceArray, options) {
@@ -103,8 +92,12 @@ module.exports = function (env) {
 
     update_config_entries(config);
 
+    let final_config;
     if (env && env.mode === 'prod')
-        return merge(config, productionConfig, {arrayMerge: arrayMerge});
+        final_config = merge(config, productionConfig, {arrayMerge: arrayMerge});
     else
-        return merge(config, debugConfig, {arrayMerge: arrayMerge});
+        final_config = merge(config, debugConfig, {arrayMerge: arrayMerge});
+
+    console.log(final_config);
+    return final_config;
 };
